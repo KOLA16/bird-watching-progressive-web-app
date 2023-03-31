@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+</head>
+<body>
+<h1><%= title %></h1>
+
+
+<form id=“xForm" method="post" action="/add">
+    <label for='nickname'>User nickname:</label>
+    <input type="text" name="nickname" id="nickname">
+    <p><label for='obs_date'>Observation date:</label>
+        <input type="date" name="obs_date" id="obs_date" value="2023-03-31", min="1900-01-01", max="2023-01-31">
+    </p>
+    <p><label for='location'>Location:</label>
+        <input type="text" name="loc" id="loc">
+    </p>
+    <p><label for='bird_species'>Identification:</label>
+        <input type="text" name="bird_species" id="bird_species">
+    </p>
+    <p><label for='desc'>Description:</label>
+        <input type="text" name="desc" id="desc", value="">
+    </p>
+    <p><label for='img'>Load Image:</label>
+        <input type="file" name="img" id="img", value="">
+    </p>
+    <p><input type="submit" name="g" value="Submit" id="g"></p>
+</form>
+<div id="results" style="margin-top:30px"></div>
+</body>
+</html>
