@@ -7,9 +7,9 @@ exports.sighting_create_post = async (req, res) => {
         user_nickname: formData.nickname,
         observation_date: formData.obs_date,
         location: formData.loc,
-        image: formData.img,
         identification: formData.bird_species,
-        description: formData.desc
+        description: formData.desc,
+        image: req.file.path
     })
 
     try {

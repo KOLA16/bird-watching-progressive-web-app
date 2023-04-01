@@ -9,7 +9,7 @@
 <h1><%= title %></h1>
 
 
-<form id=“xForm" method="post" action="/add">
+<form id=“xForm" enctype="multipart/form-data" method="post" action="/add">
     <label for='nickname'>User nickname:</label>
     <input type="text" name="nickname" id="nickname">
     <p><label for='obs_date'>Observation date:</label>
@@ -25,7 +25,7 @@
         <input type="text" name="desc" id="desc", value="">
     </p>
     <p><label for='img'>Load Image:</label>
-        <input type="file" name="img" id="img", value="">
+        <input type="file" name="img" id="img", accept="image/*">
     </p>
     <p><input type="submit" name="g" value="Submit" id="g"></p>
 </form>

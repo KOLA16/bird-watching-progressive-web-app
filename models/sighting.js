@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const sightingSchema = new Schema({
-    user_nickname: {type: String, required: true, max: 50 },
+    user_nickname: {type: String, required: true, max: 100 },
     observation_date: { type: Date, required: true },
     location: {
         type: {
@@ -12,9 +12,9 @@ const sightingSchema = new Schema({
             type: [Number]
         },
     },
-    image: { type: Buffer },
     identification: { type: String, default: 'unknown' },
-    description: { type: String, required: true }
+    description: { type: String, required: true, max: 5000 },
+    image: { type: String }
 })
 
 const Sighting = mongoose.model('Sighting', sightingSchema)
