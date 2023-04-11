@@ -15,9 +15,9 @@ const sightingSchema = new Schema({
             required: true
         },
     },
-    identification: { type: String, default: 'unknown' },
+    identification: { type: String },
     description: { type: String, required: true, max: 5000 },
-    image: { type: String, required: true }
+    image: { type: String }
 })
 
 // 2dsphere index for speeding up geospatial queries
