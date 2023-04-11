@@ -6,7 +6,10 @@ exports.sighting_create_post = async (req, res) => {
     const sighting = new Sighting({
         user_nickname: formData.nickname,
         observation_date: formData.obs_date,
-        location: formData.loc,
+        location: {
+            type: 'Point',
+            coordinates: [formData.lat, formData.lng]
+        },
         identification: formData.bird_species,
         description: formData.desc,
         image: req.file.path

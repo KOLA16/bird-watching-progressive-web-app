@@ -7,7 +7,7 @@ async function initMap() {
     // Request needed libraries.
     //@ts-ignore
     const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+    const { Marker } = await google.maps.importLibrary("marker");
 
     // The map, centered at Sheffield
     map = new Map(document.getElementById("map"), {
@@ -16,12 +16,27 @@ async function initMap() {
         mapId: "LOCATION_SELECTOR",
     });
 
-    // The marker, positioned at Sheffield
-    const marker = new AdvancedMarkerView({
-        map: map,
+    // Initialise marker at the centre of Sheffield
+    let marker = new Marker({
         position: position,
-        title: "Sheffield",
+        map: map,
+        title: "Sighting location"
     });
+
+    // Change position of the marker after click on map
+    map.addListener("click", (e) => {
+        placeMarker(e.latLng, map, marker);
+    });
+}
+
+function placeMarker(latLng, map, marker) {
+    marker.setPosition(latLng);
+
+    // Fill location form field with marker coordinates
+    let lat_input = document.getElementById("lat");
+    let lng_input = document.getElementById("lng");
+    lat_input.value = latLng.lat();
+    lng_input.value = latLng.lng();
 }
 
 initMap();
