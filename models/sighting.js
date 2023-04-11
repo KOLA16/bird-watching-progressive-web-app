@@ -7,15 +7,21 @@ const sightingSchema = new Schema({
     location: {
         type: {
             type: String,
+            enum: ['Point'],
+            required: true
         },
         coordinates: {
-            type: [Number]
+            type: [Number],
+            required: true
         },
     },
     identification: { type: String, default: 'unknown' },
     description: { type: String, required: true, max: 5000 },
     image: { type: String }
 })
+
+// 2dsphere index for speeding up geospatial queries
+sightingSchema.index({ location: '2dsphere' })
 
 const Sighting = mongoose.model('Sighting', sightingSchema)
 
