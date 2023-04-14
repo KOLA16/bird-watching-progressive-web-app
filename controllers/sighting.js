@@ -20,9 +20,36 @@ exports.sighting_create_post = async (req, res) => {
 
     try {
         const newSighting = await sighting.save()
-        res.send('New sighting successfully added!')
+        const id = newSighting._id
+        res.redirect('/sighting?id=' + id)
     } catch (err) {
         res.status(500).send('Invalid data!')
     }
+}
 
+// Handle Sighting GET.
+exports.sighting_get = async (req, res) => {
+    const sighting_id = req.query.id
+
+    try {
+        const selectedSighting = await Sighting.findById(sighting_id).exec()
+        // Display 'image not available' if image not provided
+        const img = selectedSighting.image ?
+            selectedSighting.image.replace('public','') : '/uploads/image-not-available.jpg'
+
+        console.log(img)
+        res.render(
+            'sighting',
+            {
+                title: 'Sighting Page',
+                nickname: selectedSighting.user_nickname,
+                date: selectedSighting.observation_date,
+                location: selectedSighting.location.coordinates,
+                identification: selectedSighting.identification,
+                description: selectedSighting.description,
+                image: img
+            })
+    } catch (err) {
+        res.status(500).send('Sighting not found!')
+    }
 }
