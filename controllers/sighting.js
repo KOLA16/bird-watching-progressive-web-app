@@ -44,7 +44,8 @@ exports.sighting_get = async (req, res) => {
                 title: 'Sighting Page',
                 nickname: selectedSighting.user_nickname,
                 date: selectedSighting.observation_date,
-                location: selectedSighting.location.coordinates,
+                lat: selectedSighting.location.coordinates[0],
+                lng: selectedSighting.location.coordinates[1],
                 identification: selectedSighting.identification,
                 description: selectedSighting.description,
                 image: img
