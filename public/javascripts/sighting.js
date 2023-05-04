@@ -1,8 +1,8 @@
-// Initialize and add the map
 let map
-
+let username = null
+let chatId = null
 let socket = io()
-
+let chatButton = document.getElementById("chat_send")
 
 const initMap = async () => {
     // The location of sighting
@@ -31,15 +31,58 @@ const initMap = async () => {
 }
 
 /**
+ * initialises the chat interface with the socket messages
+ */
+const initChat = () => {
+
+    // connect to room when the sighting page is opened
+    connectToRoom()
+
+    // called when someone joins the room
+    socket.on('joined', (room, userId) => {
+            // notifies that someone has joined the room
+            writeOnHistory('<b>'+userId+'</b>' + ' joined the chat')
+    })
+
+    // called when a message is received
+    socket.on('chat', (room, userId, chatText) => {
+        let who = userId
+        writeOnHistory('<b>' + who + ':</b> ' + chatText)
+    })
+}
+
+/**
  * used to connect to a chat room.
  * -
  */
-function connectToRoom() {
-    let username = 'Unknown-' + Math.random()
-    let chatId = document.getElementById("chatId")
+const connectToRoom = () => {
+    username = document.getElementById("username").innerHTML
+    chatId = document.getElementById("chatId").innerHTML
 
     socket.emit('create or join', chatId, username)
 }
 
+/**
+ * called when the Send button is pressed. It gets the text to send from the interface
+ * and sends the message via socket
+ */
+const sendChatText = () => {
+    let chatText = document.getElementById('chat_input').value
+    socket.emit('chat', chatId, username, chatText)
+}
+
+/**
+ * it appends the given html text to the history div
+ * @param text: the text to append
+ */
+const writeOnHistory = (text) => {
+    let history = document.getElementById('history')
+    let paragraph = document.createElement('p')
+    paragraph.innerHTML = text
+    history.appendChild(paragraph)
+    document.getElementById('chat_input').value = ''
+}
+
+chatButton.addEventListener('click', sendChatText)
+initChat()
 initMap()
-connectToRoom()

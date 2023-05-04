@@ -8,7 +8,7 @@
     <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
     <script type="module" src="/javascripts/sighting.js"></script>
 </head>
-<img>
+
 <h1><%= title %></h1>
 <img src='<%= image %>' alt='Sighting image' id='sighting_img'>
 <!--Hacky solution to pass lat and lng to js file through hidden div element -->
@@ -22,13 +22,15 @@
 
 <!--The div element for the chat interface -->
 <div id="chat_interface">
-    <div id="chatId"><%= chatId %></div>
+    <div id="chatId", style="display: none;"><%= chatId %></div>
+    <div id="username", style="display: none;"><%= nickname %></div>
     <div id="history"></div>
     <div id="input">
         <form onsubmit="return false;" style="width: 100%">
             <p>
                 <label for="name"> chat: </label>
                 <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                <button id="chat_send">Send</button>
             </p>
         </form>
     </div>
