@@ -1,6 +1,9 @@
 // Initialize and add the map
 let map
 
+let socket = io()
+
+
 const initMap = async () => {
     // The location of sighting
     const lat = parseFloat(document.getElementById("location").getAttribute("data-lat"))
@@ -27,4 +30,16 @@ const initMap = async () => {
     })
 }
 
+/**
+ * used to connect to a chat room.
+ * -
+ */
+function connectToRoom() {
+    let username = 'Unknown-' + Math.random()
+    let chatId = document.getElementById("chatId")
+
+    socket.emit('create or join', chatId, username)
+}
+
 initMap()
+connectToRoom()

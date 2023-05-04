@@ -23,6 +23,7 @@ exports.sighting_create_post = async (req, res) => {
         const id = newSighting._id
         res.redirect('/sighting?id=' + id)
     } catch (err) {
+        console.log(err.errors)
         res.status(500).send('Invalid data!')
     }
 }
@@ -48,7 +49,8 @@ exports.sighting_get = async (req, res) => {
                 lng: selectedSighting.location.coordinates[1],
                 identification: selectedSighting.identification,
                 description: selectedSighting.description,
-                image: img
+                image: img,
+                chatId: sighting_id
             })
     } catch (err) {
         res.status(500).send('Sighting not found!')

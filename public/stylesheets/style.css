@@ -20,3 +20,9 @@ a {
   height: 300px;
   width: 600px;
 }
+
+.bottom {
+  position: absolute;
+  bottom: 10px;
+  width: 90%;
+}
