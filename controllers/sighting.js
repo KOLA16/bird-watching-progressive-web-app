@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const Sighting = require('../models/sighting')
 
 // Handle Sighting create on POST.
@@ -35,7 +37,7 @@ exports.sighting_get = async (req, res) => {
         const selectedSighting = await Sighting.findById(sighting_id).exec()
         // Display 'image not available' if image not provided
         const img = selectedSighting.image ?
-            selectedSighting.image.replace('public','') : '/uploads/image-not-available.jpg'
+            selectedSighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
 
         console.log(img)
         res.render(
@@ -52,5 +54,27 @@ exports.sighting_get = async (req, res) => {
             })
     } catch (err) {
         res.status(500).send('Sighting not found!')
+    }
+}
+
+// Handle all Sightings GET.
+exports.sightings_get = async (req, res) => {
+    try {
+        const sightings = await Sighting.find({}).sort({ observation_date: -1,  }).exec()
+        sightings.forEach((sighting) => {
+            // Display 'image not available' if image not provided
+            sighting.image = sighting.image ? sighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
+        })
+        console.log(sightings)
+
+        res.render(
+            'sightings',
+            {
+                title: 'Sightings',
+                sightings,
+                moment: moment
+            })
+    } catch (err) {
+        res.status(500).send('Sightings not found!')
     }
 }

@@ -20,3 +20,13 @@ a {
   height: 300px;
   width: 600px;
 }
+
+#sightings_img {
+  height: 100px;
+  width: 200px;
+  margin: 10px 0;
+}
+
+.clickable {
+  cursor: pointer;
+}
