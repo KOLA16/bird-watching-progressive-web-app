@@ -2,7 +2,8 @@ let map
 let username = null
 let chatId = null
 let socket = io()
-let chatButton = document.getElementById("chat_send")
+let joinChatButton = document.getElementById("chat_join")
+let sendChatButton = document.getElementById("chat_send")
 
 const initMap = async () => {
     // The location of sighting
@@ -35,9 +36,6 @@ const initMap = async () => {
  */
 const initChat = () => {
 
-    // connect to room when the sighting page is opened
-    connectToRoom()
-
     // called when someone joins the room
     socket.on('joined', (room, userId) => {
             // notifies that someone has joined the room
@@ -56,8 +54,20 @@ const initChat = () => {
  * -
  */
 const connectToRoom = () => {
-    username = document.getElementById("username").innerHTML
+
+    // replace username input with chat message input
+    document.getElementById('chat_username').style.display = 'none'
+    document.getElementById('chat_input').style.display = 'inline'
+
+    // replace 'join chat' button with 'send message' button
+    joinChatButton.style.display = 'none'
+    sendChatButton.style.display = 'inline'
+
+    username = document.getElementById('chat_username').value
     chatId = document.getElementById("chatId").innerHTML
+
+    document.getElementById('chat_username').value = ''
+    document.getElementById('chat_label').innerHTML = 'CHAT'
 
     socket.emit('create or join', chatId, username)
 }
@@ -83,6 +93,7 @@ const writeOnHistory = (text) => {
     document.getElementById('chat_input').value = ''
 }
 
-chatButton.addEventListener('click', sendChatText)
+joinChatButton.addEventListener('click', connectToRoom)
+sendChatButton.addEventListener('click', sendChatText)
 initChat()
 initMap()
