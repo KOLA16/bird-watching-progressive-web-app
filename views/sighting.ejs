@@ -12,7 +12,7 @@
 <h1><%= title %></h1>
 <img src='<%= image %>' alt='Sighting image' id='sighting_img'>
 <!--Hacky solution to pass lat and lng to js file through hidden div element -->
-<div id="location" data-lat=<%= lat %> data-lng=<%= lng %> hidden></div>
+<div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
 <!--The div element for the map -->
 <div id="map"></div>
 <p>Added by: <%= nickname %></p>
@@ -22,7 +22,8 @@
 
 <!--The div element for the chat interface -->
 <div id="chat_interface">
-    <div id="chatId", style="display: none;"><%= chatId %></div>
+    <div id="chatId" style="display: none;"><%= chatId %></div>
+    <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
     <div id="history"></div>
     <div id="input">
         <form onsubmit="return false;" style="width: 100%">

@@ -36,6 +36,17 @@ const initMap = async () => {
  */
 const initChat = () => {
 
+    // called when sighting page is opened
+    // prints chat history stored in MongoDB
+    let messagesStr = document.getElementById('messages').textContent
+    let messages = JSON.parse(messagesStr)
+
+    messages.forEach((message) => {
+        let chat_username = message.chat_username
+        let chat_text = message.chat_text
+        writeOnHistory('<b>'+chat_username+'</b>' + ' ' + chat_text)
+    })
+
     // called when someone joins the room
     socket.on('joined', (room, userId) => {
             // notifies that someone has joined the room
@@ -64,7 +75,7 @@ const connectToRoom = () => {
     sendChatButton.style.display = 'inline'
 
     username = document.getElementById('chat_username').value
-    chatId = document.getElementById("chatId").innerHTML
+    chatId = document.getElementById('chatId').innerHTML
 
     document.getElementById('chat_username').value = ''
     document.getElementById('chat_label').innerHTML = 'CHAT'

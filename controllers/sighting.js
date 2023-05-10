@@ -69,7 +69,8 @@ exports.sighting_get = async (req, res) => {
                 identification: selectedSighting.identification,
                 description: selectedSighting.description,
                 image: img,
-                chatId: sighting_id
+                chatId: sighting_id,
+                messages: selectedSighting.chat_history
             })
     } catch (err) {
         res.status(500).send('Sighting not found!')
