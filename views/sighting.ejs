@@ -3,21 +3,40 @@
 <head>
     <title><%= title %></title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
     <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
     <script type="module" src="/javascripts/sighting.js"></script>
 </head>
-<img>
+
 <h1><%= title %></h1>
 <img src='<%= image %>' alt='Sighting image' id='sighting_img'>
 <!--Hacky solution to pass lat and lng to js file through hidden div element -->
-<div id="location" data-lat=<%= lat %> data-lng=<%= lng %> hidden></div>
+<div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
 <!--The div element for the map -->
 <div id="map"></div>
-<p>Nickname: <%= nickname %></p>
+<p>Added by: <%= nickname %></p>
 <p>Observation Date: <%= date %></p>
 <p>Identification: <%= identification %></p>
 <p>Description: <%= description %></p>
+
+<!--The div element for the chat interface -->
+<div id="chat_interface">
+    <div id="chatId" style="display: none;"><%= chatId %></div>
+    <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
+    <div id="history"></div>
+    <div id="input">
+        <form onsubmit="return false;" style="width: 100%">
+            <p>
+                <label for="chat_username" id="chat_label"> Provide your username to join the chat: </label>
+                <input type="text" id="chat_username" name="chat_username" style="width: 20%">
+                <input type="text" id="chat_input" name="chat_input" style="width: 30%; display: none;">
+                <button id="chat_join">Join Discussion</button>
+                <button id="chat_send" style="display: none;">Send</button>
+            </p>
+        </form>
+    </div>
+</div>
 
 <!-- Load Google Maps API -->
 <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})

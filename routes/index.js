@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 
-const sightingController = require("../controllers/sighting");
+const sighting = require('../controllers/sighting')
 
 // define storage options to be used for file uploads with multer
 const storage = multer.diskStorage({
@@ -24,14 +24,14 @@ router.get('/add', (req, res, next) => {
   res.render('add', { title: 'Add new bird sighting' })
 })
 
-/* GET selected sighting. */
-router.get('/sighting', (req, res, next) => {
-  sightingController.sighting_get(req, res)
-})
-
 /* POST new sighting to the database. */
 router.post('/add', upload.single('img'), (req, res) => {
-  sightingController.sighting_create_post(req, res)
+  sighting.sighting_create_post(req, res)
+})
+
+/* GET selected sighting. */
+router.get('/sighting', (req, res, next) => {
+  sighting.sighting_get(req, res)
 })
 
 module.exports = router

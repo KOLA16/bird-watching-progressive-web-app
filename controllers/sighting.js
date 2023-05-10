@@ -17,7 +17,8 @@ exports.sighting_create_post = async (req, res) => {
         },
         identification: formData.bird_species,
         description: formData.desc,
-        image: imgPath
+        image: imgPath,
+        chat_history: []
     })
 
     try {
@@ -25,7 +26,26 @@ exports.sighting_create_post = async (req, res) => {
         const id = newSighting._id
         res.redirect('/sighting?id=' + id)
     } catch (err) {
+        console.log(err.errors)
         res.status(500).send('Invalid data!')
+    }
+}
+
+// Handle Sighting chat history UPDATE.
+exports.sighting_update_chat_history = async (chatDetails) => {
+    let sighting_id = chatDetails.sighting_id
+    let chat_username = chatDetails.chat_username
+    let chat_text = chatDetails.chat_text
+    let message = { chat_username: chat_username, chat_text: chat_text }
+
+    try {
+        await Sighting.findByIdAndUpdate( sighting_id,
+            { $push: {
+                             chat_history: message
+            }
+        }).exec()
+    } catch (err) {
+        console.log(err)
     }
 }
 
@@ -50,7 +70,9 @@ exports.sighting_get = async (req, res) => {
                 lng: selectedSighting.location.coordinates[1],
                 identification: selectedSighting.identification,
                 description: selectedSighting.description,
-                image: img
+                image: img,
+                chatId: sighting_id,
+                messages: selectedSighting.chat_history
             })
     } catch (err) {
         res.status(500).send('Sighting not found!')
