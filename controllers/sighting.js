@@ -59,7 +59,6 @@ exports.sighting_get = async (req, res) => {
         const img = selectedSighting.image ?
             selectedSighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
 
-        console.log(img)
         res.render(
             'sighting',
             {
@@ -87,7 +86,6 @@ exports.sightings_get = async (req, res) => {
             // Display 'image not available' if image not provided
             sighting.image = sighting.image ? sighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
         })
-        console.log(sightings)
 
         res.render(
             'sightings',
