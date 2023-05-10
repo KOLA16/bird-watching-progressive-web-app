@@ -1,3 +1,5 @@
+const sighting = require('../controllers/sighting')
+
 exports.init = (io) => {
     io.sockets.on('connection', (socket) => {
         try {
@@ -14,6 +16,15 @@ exports.init = (io) => {
              */
             socket.on('chat', (room, userId, chatText) => {
                 io.sockets.to(room).emit('chat', room, userId, chatText)
+
+                // Update chat history in MongoDB
+                let chatDetails = {
+                    'sighting_id': room,
+                    'chat_username': userId,
+                    'chat_text': chatText
+                }
+
+                sighting.sighting_update_chat_history(chatDetails)
             })
 
             /**

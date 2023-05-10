@@ -19,24 +19,19 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
-/* GET home page. */
-router.get('/index', (req, res, next) => {
-  res.render('index', { title: 'Bird Sighting App' })
-})
-
 /* GET add sighting page. */
 router.get('/add', (req, res, next) => {
   res.render('add', { title: 'Add new bird sighting' })
 })
 
-/* GET selected sighting. */
-router.get('/sighting', (req, res, next) => {
-  sighting.sighting_get(req, res)
-})
-
 /* POST new sighting to the database. */
 router.post('/add', upload.single('img'), (req, res) => {
   sighting.sighting_create_post(req, res)
+})
+
+/* GET selected sighting. */
+router.get('/sighting', (req, res, next) => {
+  sighting.sighting_get(req, res)
 })
 
 module.exports = router

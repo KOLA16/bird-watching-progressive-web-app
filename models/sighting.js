@@ -17,7 +17,8 @@ const sightingSchema = new Schema({
     },
     identification: { type: String },
     description: { type: String, required: true, max: 5000 },
-    image: { type: String }
+    image: { type: String },
+    chat_history: { type: [{chat_username: String, chat_text: String}] }
 })
 
 // 2dsphere index for speeding up geospatial queries
