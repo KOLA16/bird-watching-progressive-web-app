@@ -1,6 +1,8 @@
 // Initialize and add the map
 let map
 
+const authorInput = document.getElementById("author")
+
 const initMap = async () => {
     // The location of Sheffield
     const position = { lat: 53.383331, lng: -1.466667 }
@@ -38,5 +40,38 @@ const placeMarker = (latLng, map, marker) => {
     lat_input.value = latLng.lat()
     lng_input.value = latLng.lng()
 }
+
+/**
+ * Gets current username from IndexedDB and treats him as an author
+ * of the sighting that is being created
+ */
+const setAuthor = () => {
+    const localIDB = requestIDB.result
+    const transaction = localIDB.transaction(["usernames"], "readwrite")
+    const localStore = transaction.objectStore("usernames")
+    const getRequest = localStore.get(1)
+    getRequest.addEventListener("success", () => {
+        const username = getRequest.result.username
+        authorInput.value = username
+    })
+}
+
+const handleSuccess = () => {
+    console.log('Database opened')
+    setAuthor()
+}
+
+const handleUpgrade = (ev) => {
+    const db = ev.target.result
+    db.createObjectStore("usernames", { keyPath: "id" })
+    console.log('Upgraded object store')
+}
+
+const requestIDB = indexedDB.open("local")
+requestIDB.addEventListener("upgradeneeded", handleUpgrade)
+requestIDB.addEventListener("success", handleSuccess)
+requestIDB.addEventListener("error", (err) => {
+    console.log("ERROR : " + JSON.stringify(err))
+})
 
 initMap()

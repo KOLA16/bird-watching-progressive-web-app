@@ -35,7 +35,13 @@
 <dialog id="identification_dialog">
     <form id="update_form" method="post" action="/sighting">
         <input type="text" name="sighting_id" value="<%= sightingId %>" style="display: none">
-        <input type="text" name="new_identification">
+        <select id="new_identification" name="new_identification">
+            <option value="Unknown">Unknown</option>
+            <option value="Hawk">Hawk</option>
+            <option value="Eagle">Eagle</option>
+            <option value="Owl">Owl</option>
+            <option value="Falcon">Falcon</option>
+        </select>
         <button id="update_btn" type="submit">Update</button>
     </form>
 </dialog>

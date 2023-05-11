@@ -41,7 +41,6 @@ router.get('/sighting', (req, res, next) => {
 
 /* UPDATE selected sighting. */
 router.post('/sighting', (req, res, next) => {
-  console.log(req.body)
   sighting.sighting_update_identification(req, res)
 })
 

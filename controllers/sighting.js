@@ -9,7 +9,7 @@ exports.sighting_create_post = async (req, res) => {
     const imgPath = req.file ? req.file.path : null
 
     const sighting = new Sighting({
-        user_nickname: formData.nickname,
+        user_nickname: formData.author,
         observation_date: formData.obs_date,
         location: {
             type: 'Point',

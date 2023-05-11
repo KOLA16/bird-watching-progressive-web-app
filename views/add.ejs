@@ -19,8 +19,7 @@
 <h1><%= title %></h1>
 
 <form id=“xForm" enctype="multipart/form-data" method="post" action="/add">
-    <label for='nickname'>User nickname:</label>
-    <input type="text" name="nickname" id="nickname" required minlength="3" maxlength="100">
+    <input type="text" name="author" id="author" value="Unknown" style="display: none">
     <p><label for='obs_date'>Observation date:</label>
         <input type="datetime-local" name="obs_date" id="obs_date" required>
     </p>
@@ -30,8 +29,15 @@
         <!--The div element for the map -->
         <div id="map"></div>
     </p>
-    <p><label for='bird_species'>Identification:</label>
-        <input type="text" name="bird_species" id="bird_species" value="unknown" required>
+    <p>
+        <label for='bird_species'>Identification:</label>
+        <select id="bird_species" name="bird_species">
+            <option value="Unknown">Unknown</option>
+            <option value="Hawk">Hawk</option>
+            <option value="Eagle">Eagle</option>
+            <option value="Owl">Owl</option>
+            <option value="Falcon">Falcon</option>
+        </select>
     </p>
     <p><label for='desc'>Description:</label>
         <input type="text" name="desc" id="desc" required maxlength="5000">
@@ -39,7 +45,7 @@
     <p><label for='img'>Load Image:</label>
         <input type="file" name="img" id="img", accept="image/*">
     </p>
-    <p><input type="submit" name="g" value="Submit" id="g"></p>
+    <p><button type="submit" id="submit_sighting_btn">Add Sighting</button></p>
 </form>
 <div id="results" style="margin-top:30px"></div>
 
