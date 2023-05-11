@@ -63,7 +63,7 @@
         <% sightings.forEach((sighting, i)=> {%>
             <tr class="clickable clickable-row" data-href='/sighting?id=<%= sighting._id %>'>
                 <td>
-                    <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img'>
+                    <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img' width="250" height="200">
                 </td>
                 <td>
                     <%= moment(sighting.observation_date).format('D MMM H:mm') %>

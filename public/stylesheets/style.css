@@ -37,6 +37,18 @@ a {
   width: 600px;
 }
 
+/*
+* Scrollable chat window
+ */
+#history {
+  height: 300px;
+  width: 600px;
+  overflow: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 20px;
+}
+
 .bottom {
   position: absolute;
   bottom: 10px;

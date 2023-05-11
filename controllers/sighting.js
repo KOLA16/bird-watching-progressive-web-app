@@ -23,8 +23,7 @@ exports.sighting_create_post = async (req, res) => {
 
     try {
         const newSighting = await sighting.save()
-        const id = newSighting._id
-        res.redirect('/sighting?id=' + id)
+        res.redirect('/')
     } catch (err) {
         console.log(err.errors)
         res.status(500).send('Invalid data!')

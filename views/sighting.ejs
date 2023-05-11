@@ -24,9 +24,15 @@
 
 <!-- div with sighting details -->
 <div id="sighting_details">
-    <p>Added by: </p><p id="author_nickname"><%= nickname %></p>
+    <p>
+        Added by:
+        <span id="author_nickname"><%= nickname %></span>
+    </p>
     <p>Observation Date: <%= date %></p>
-    <p id="identification">Identification: <%= identification %></p>
+    <p>
+        Identification:
+        <span id="identification"><%= identification %></span>
+    </p>
     <button id="show_dialog_btn">Change Identification</button>
     <p>Description: <%= description %></p>
 </div>

@@ -51,6 +51,8 @@ const setAuthor = () => {
     const localStore = transaction.objectStore("usernames")
     const getRequest = localStore.get(1)
     getRequest.addEventListener("success", () => {
+        // THIS THROWS ERROR WHEN USERNAME NOT PROVIDED
+        // TODO: if usernames empty -> ignore and go with default value ("Unknown")
         const username = getRequest.result.username
         authorInput.value = username
     })
