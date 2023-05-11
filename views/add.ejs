@@ -9,8 +9,14 @@
 
 </head>
 <body>
-<h1><%= title %></h1>
 
+<!-- Navigation bar -->
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/add">Add Sighting</a>
+</div>
+
+<h1><%= title %></h1>
 
 <form id=“xForm" enctype="multipart/form-data" method="post" action="/add">
     <label for='nickname'>User nickname:</label>

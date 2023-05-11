@@ -9,20 +9,41 @@
     <script type="module" src="/javascripts/sighting.js"></script>
 </head>
 
+<!-- Navigation bar -->
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/add">Add Sighting</a>
+</div>
+
 <h1><%= title %></h1>
 <img src='<%= image %>' alt='Sighting image' id='sighting_img'>
 <!--Hacky solution to pass lat and lng to js file through hidden div element -->
 <div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
 <!--The div element for the map -->
 <div id="map"></div>
-<p>Added by: <%= nickname %></p>
-<p>Observation Date: <%= date %></p>
-<p>Identification: <%= identification %></p>
-<p>Description: <%= description %></p>
+
+<!-- div with sighting details -->
+<div id="sighting_details">
+    <p>Added by: </p><p id="author_nickname"><%= nickname %></p>
+    <p>Observation Date: <%= date %></p>
+    <p id="identification">Identification: <%= identification %></p>
+    <button id="show_dialog_btn">Change Identification</button>
+    <p>Description: <%= description %></p>
+</div>
+
+<!-- modal dialog containing a form to update identification -->
+<dialog id="identification_dialog">
+    <form id="update_form" method="post" action="/sighting">
+        <input type="text" name="sighting_id" value="<%= sightingId %>" style="display: none">
+        <input type="text" name="new_identification">
+        <button id="update_btn" type="submit">Update</button>
+    </form>
+</dialog>
+
 
 <!--The div element for the chat interface -->
 <div id="chat_interface">
-    <div id="chatId" style="display: none;"><%= chatId %></div>
+    <div id="chatId" style="display: none;"><%= sightingId %></div>
     <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
     <div id="history"></div>
     <div id="input">

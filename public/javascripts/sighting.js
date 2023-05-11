@@ -1,8 +1,11 @@
 let map
 let username = null
 let chatId = null
-let socket = io()
-let sendChatButton = document.getElementById("chat_send")
+
+const socket = io()
+const sendChatButton = document.getElementById("chat_send")
+const showDialogButton = document.getElementById("show_dialog_btn")
+const dialog = document.getElementById("identification_dialog")
 
 const initMap = async () => {
     // The location of sighting
@@ -63,7 +66,6 @@ const initChat = () => {
 
 /**
  * used to connect to a chat room.
- * -
  */
 const connectToRoom = () => {
     chatId = document.getElementById('chatId').innerHTML
@@ -100,9 +102,20 @@ const getUsername = () => {
     const localStore = transaction.objectStore("usernames")
     const getRequest = localStore.get(1)
     getRequest.addEventListener("success", () => {
-        console.log('username found')
         username = getRequest.result.username
         console.log(username)
+
+        // check if the current username created the sighting
+        // allow updating identification if yes
+        const author = document.getElementById("author_nickname").innerHTML
+        if (username === author) {
+            showDialogButton.style.display = "inline"
+            showDialogButton.addEventListener("click", () => {
+                dialog.showModal()
+            })
+        } else {
+            showDialogButton.style.display = "none"
+        }
 
         // connect to chat room when username retrieved from IndexedDB
         connectToRoom()

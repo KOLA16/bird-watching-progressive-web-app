@@ -39,4 +39,10 @@ router.get('/sighting', (req, res, next) => {
   sighting.sighting_get(req, res)
 })
 
+/* UPDATE selected sighting. */
+router.post('/sighting', (req, res, next) => {
+  console.log(req.body)
+  sighting.sighting_update_identification(req, res)
+})
+
 module.exports = router

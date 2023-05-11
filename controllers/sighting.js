@@ -31,12 +31,25 @@ exports.sighting_create_post = async (req, res) => {
     }
 }
 
+// Handle Sighting identification UPDATE.
+exports.sighting_update_identification = async (req, res) => {
+    const sighting_id = req.body.sighting_id
+    const new_identification = req.body.new_identification
+
+    try {
+        await Sighting.findByIdAndUpdate( sighting_id, { identification: new_identification} ).exec()
+        res.redirect('/sighting?id=' + sighting_id)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 // Handle Sighting chat history UPDATE.
 exports.sighting_update_chat_history = async (chatDetails) => {
-    let sighting_id = chatDetails.sighting_id
-    let chat_username = chatDetails.chat_username
-    let chat_text = chatDetails.chat_text
-    let message = { chat_username: chat_username, chat_text: chat_text }
+    const sighting_id = chatDetails.sighting_id
+    const chat_username = chatDetails.chat_username
+    const chat_text = chatDetails.chat_text
+    const message = { chat_username: chat_username, chat_text: chat_text }
 
     try {
         await Sighting.findByIdAndUpdate( sighting_id,
@@ -51,7 +64,7 @@ exports.sighting_update_chat_history = async (chatDetails) => {
 
 // Handle Sighting GET.
 exports.sighting_get = async (req, res) => {
-    const sighting_id = req.query.id
+    let sighting_id = req.query.id
 
     try {
         const selectedSighting = await Sighting.findById(sighting_id).exec()
@@ -70,7 +83,7 @@ exports.sighting_get = async (req, res) => {
                 identification: selectedSighting.identification,
                 description: selectedSighting.description,
                 image: img,
-                chatId: sighting_id,
+                sightingId: sighting_id,
                 messages: selectedSighting.chat_history
             })
     } catch (err) {
