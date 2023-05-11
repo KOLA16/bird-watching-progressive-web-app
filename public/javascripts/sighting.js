@@ -2,7 +2,6 @@ let map
 let username = null
 let chatId = null
 let socket = io()
-let joinChatButton = document.getElementById("chat_join")
 let sendChatButton = document.getElementById("chat_send")
 
 const initMap = async () => {
@@ -36,8 +35,10 @@ const initMap = async () => {
  */
 const initChat = () => {
 
-    // called when sighting page is opened
-    // prints chat history stored in MongoDB
+    // get username from IndexedDB
+    getUsername()
+
+    // print chat history stored in MongoDB
     let messagesStr = document.getElementById('messages').textContent
     let messages = JSON.parse(messagesStr)
 
@@ -65,21 +66,7 @@ const initChat = () => {
  * -
  */
 const connectToRoom = () => {
-
-    // replace username input with chat message input
-    document.getElementById('chat_username').style.display = 'none'
-    document.getElementById('chat_input').style.display = 'inline'
-
-    // replace 'join chat' button with 'send message' button
-    joinChatButton.style.display = 'none'
-    sendChatButton.style.display = 'inline'
-
-    username = document.getElementById('chat_username').value
     chatId = document.getElementById('chatId').innerHTML
-
-    document.getElementById('chat_username').value = ''
-    document.getElementById('chat_label').innerHTML = 'CHAT'
-
     socket.emit('create or join', chatId, username)
 }
 
@@ -104,7 +91,41 @@ const writeOnHistory = (text) => {
     document.getElementById('chat_input').value = ''
 }
 
-joinChatButton.addEventListener('click', connectToRoom)
+/**
+ * Gets current username from IndexedDB
+ */
+const getUsername = () => {
+    const localIDB = requestIDB.result
+    const transaction = localIDB.transaction(["usernames"], "readwrite")
+    const localStore = transaction.objectStore("usernames")
+    const getRequest = localStore.get(1)
+    getRequest.addEventListener("success", () => {
+        console.log('username found')
+        username = getRequest.result.username
+        console.log(username)
+
+        // connect to chat room when username retrieved from IndexedDB
+        connectToRoom()
+    })
+}
+
+const handleSuccess = () => {
+    console.log('Database opened')
+    initChat()
+}
+
+const handleUpgrade = (ev) => {
+    const db = ev.target.result
+    db.createObjectStore("usernames", { keyPath: "id" })
+    console.log('Upgraded object store')
+}
+
+const requestIDB = indexedDB.open("local")
+requestIDB.addEventListener("upgradeneeded", handleUpgrade)
+requestIDB.addEventListener("success", handleSuccess)
+requestIDB.addEventListener("error", (err) => {
+    console.log("ERROR : " + JSON.stringify(err))
+})
+
 sendChatButton.addEventListener('click', sendChatText)
-initChat()
 initMap()
