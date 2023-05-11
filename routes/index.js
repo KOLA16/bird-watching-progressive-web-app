@@ -19,6 +19,11 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 
+/* GET all sightings. */
+router.get('/', (req, res, next) => {
+  sighting.sightings_get(req, res)
+})
+
 /* GET add sighting page. */
 router.get('/add', (req, res, next) => {
   res.render('add', { title: 'Add new bird sighting' })

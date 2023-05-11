@@ -22,6 +22,16 @@
         <%= title %>
     </h1>
 
+    <!-- Provide username form before accessing the functionality -->
+    <div id="username_form">
+        <form>
+            <input type="text" name="username" id="username_input" required minlength="3" maxlength="100">
+            <input id="username_btn_set" type="button" value="Set Username">
+        </form>
+    </div>
+
+
+    <!-- Table with all sightings -->
     <table class="table table-hover align-middle table-sm" id="sightings_table">
         <thead class="table-light">
             <th>Bird Sighting</th>
