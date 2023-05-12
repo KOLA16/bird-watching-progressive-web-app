@@ -78,7 +78,16 @@
             <% }); %>
     </table>
 
+    <footer>
+        <p>© 2023 Bird Watching. All Rights Reserved.</p>
+    </footer>
+
     <script>
+
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' });
+        }
+
         function sortTable(col_index, is_datetime) {
             var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
             table = document.getElementById("sightings_table");
@@ -129,6 +138,7 @@
                 }
             }
         }
+
     </script>
 </body>
 
