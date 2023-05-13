@@ -130,6 +130,7 @@ const handleSuccess = () => {
 const handleUpgrade = (ev) => {
     const db = ev.target.result
     db.createObjectStore("usernames", { keyPath: "id" })
+    db.createObjectStore("sightings", { keyPath: "id", autoIncrement: true})
     console.log('Upgraded object store')
 }
 

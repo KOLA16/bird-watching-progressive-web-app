@@ -2,6 +2,14 @@
 let map
 
 const authorInput = document.getElementById("author")
+const dateInput = document.getElementById("obs_date")
+const latInput = document.getElementById("lat")
+const lngInput = document.getElementById("lng")
+const identificationInput = document.getElementById("bird_species")
+const descriptionInput = document.getElementById("desc")
+const imageInput = document.getElementById("img")
+
+const submitBtn = document.getElementById("submit_sighting_btn")
 
 const initMap = async () => {
     // The location of Sheffield
@@ -61,11 +69,14 @@ const setAuthor = () => {
 const handleSuccess = () => {
     console.log('Database opened')
     setAuthor()
+    // submitBtn.addEventListener("click", handleAddSighting)
 }
+
 
 const handleUpgrade = (ev) => {
     const db = ev.target.result
     db.createObjectStore("usernames", { keyPath: "id" })
+    db.createObjectStore("sightings", { keyPath: "id", autoIncrement: true})
     console.log('Upgraded object store')
 }
 
