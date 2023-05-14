@@ -2,14 +2,20 @@
 let map
 
 const authorInput = document.getElementById("author")
-const dateInput = document.getElementById("obs_date")
+const mapWindow = document.getElementById("map")
 const latInput = document.getElementById("lat")
 const lngInput = document.getElementById("lng")
-const identificationInput = document.getElementById("bird_species")
-const descriptionInput = document.getElementById("desc")
-const imageInput = document.getElementById("img")
+const offLabel = document.getElementById("offline_label")
 
-const submitBtn = document.getElementById("submit_sighting_btn")
+
+window.addEventListener("offline", () => {
+    // TODO: Change to use HTML5 Geolocation instead,
+    //  i.e. use the latest online registered location
+    mapWindow.style.display = 'none'
+    offLabel.style.display = 'inline'
+    latInput.style.display = 'inline'
+    lngInput.style.display = 'inline'
+})
 
 const initMap = async () => {
     // The location of Sheffield
@@ -20,7 +26,7 @@ const initMap = async () => {
     const { Marker } = await google.maps.importLibrary("marker")
 
     // The map, centered at Sheffield
-    map = new Map(document.getElementById("map"), {
+    map = new Map(mapWindow, {
         zoom: 10,
         center: position,
         mapId: "LOCATION_SELECTOR",
@@ -43,10 +49,8 @@ const placeMarker = (latLng, map, marker) => {
     marker.setPosition(latLng)
 
     // Fill location form field with marker coordinates
-    let lat_input = document.getElementById("lat")
-    let lng_input = document.getElementById("lng")
-    lat_input.value = latLng.lat()
-    lng_input.value = latLng.lng()
+    latInput.value = latLng.lat()
+    lngInput.value = latLng.lng()
 }
 
 /**

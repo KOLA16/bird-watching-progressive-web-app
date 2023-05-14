@@ -28,8 +28,9 @@
         <p>
             <label for="location">Select sighting location:</label>
         </p>
-        <input type="hidden" step="any" name="lat" id="lat" value="53.383331" required>
-        <input type="hidden" step="any" name="lng" id="lng" value="-1.466667" required>
+        <label id="offline_label" for="lat" style="display: none">Offline, map not available, provide lat and lng manually: </label>
+        <input step="any" name="lat" id="lat" value="53.383331" style="display: none" required>
+        <input step="any" name="lng" id="lng" value="-1.466667" style="display: none" required>
         <!--The div element for the map -->
         <div id="map"></div>
         <p>
