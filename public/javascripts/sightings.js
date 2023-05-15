@@ -7,8 +7,9 @@ $(document).ready(function($) {
     });
 });
 
-usernameBtn.addEventListener('click', async () => {
-    await changeUsername(usernameInput.value)
+// Change initial random username
+usernameBtn.addEventListener('click', () => {
+    changeUsername(usernameInput.value)
     usernameInput.value = ''
 })
 
@@ -18,7 +19,7 @@ usernameBtn.addEventListener('click', async () => {
 const initSightings = () => {
     // Check for indexedDB support
     if ('indexedDB' in window) {
-        initIndexedDB()
+        initIndexedDB(addRandomUsername)
     } else {
         console.log('This browser doesn\'t support IndexedDB')
     }
@@ -27,8 +28,5 @@ const initSightings = () => {
     if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
     }
-
-    addRandomUsername()
 }
-
 initSightings()
