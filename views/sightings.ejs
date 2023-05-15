@@ -14,6 +14,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/JavaScript" src="https://MomentJS.com/downloads/moment-with-locales.js"></script>
+    <script type="module" src="/javascripts/indexeddb.js"></script>
     <script type="module" src="/javascripts/sightings.js"></script>
 </head>
 
@@ -29,11 +30,11 @@
         <%= title %>
     </h1>
 
-    <!-- Provide username form before accessing the functionality -->
+    <!-- Change randomly generated username form -->
     <div id="username_form">
         <form>
             <input type="text" name="username" id="username_input" required minlength="3" maxlength="100">
-            <input id="username_btn_set" type="button" value="Set Username">
+            <input id="username_btn_set" type="button" value="Change Username">
         </form>
     </div>
 
@@ -85,10 +86,6 @@
 </div>
 
     <script>
-
-        if('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' });
-        }
 
         function sortTable(col_index, is_datetime) {
             var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
