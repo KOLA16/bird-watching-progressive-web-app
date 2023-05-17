@@ -83,8 +83,6 @@ const initAdd = () => {
                 setAuthor(username)
             })
         })
-
-        initIndexedDB(getUsername(setAuthor))
     } else {
         console.log('This browser doesn\'t support IndexedDB')
     }
