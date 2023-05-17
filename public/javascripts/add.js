@@ -64,8 +64,9 @@ const placeMarker = (latLng, map, marker) => {
 }
 
 /**
- * Gets current user from IndexedDB and sets him as an author
+ * Sets the current user as an author
  * of the sighting that is being created
+ * @param username
  */
 const setAuthor = (username) => {
     authorInput.value = username

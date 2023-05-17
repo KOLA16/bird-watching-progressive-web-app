@@ -1,11 +1,13 @@
 let map
-let username = null
+let visitorUsername = null
 let chatId = null
 
 const socket = io()
 const sendChatButton = document.getElementById("chat_send")
 const showDialogButton = document.getElementById("show_dialog_btn")
 const dialog = document.getElementById("identification_dialog")
+const author = document.getElementById("author_nickname").innerHTML
+
 
 const initMap = async () => {
     // The location of sighting
@@ -38,9 +40,6 @@ const initMap = async () => {
  */
 const initChat = () => {
 
-    // get username from IndexedDB
-    getUsername()
-
     // print chat history stored in MongoDB
     let messagesStr = document.getElementById('messages').textContent
     let messages = JSON.parse(messagesStr)
@@ -59,8 +58,7 @@ const initChat = () => {
 
     // called when a message is received
     socket.on('chat', (room, userId, chatText) => {
-        let who = userId
-        writeOnHistory('<b>' + who + ':</b> ' + chatText)
+        writeOnHistory('<b>' + userId + ':</b> ' + chatText)
     })
 }
 
@@ -69,7 +67,7 @@ const initChat = () => {
  */
 const connectToRoom = () => {
     chatId = document.getElementById('chatId').innerHTML
-    socket.emit('create or join', chatId, username)
+    socket.emit('create or join', chatId, visitorUsername)
 }
 
 /**
@@ -78,7 +76,7 @@ const connectToRoom = () => {
  */
 const sendChatText = () => {
     let chatText = document.getElementById('chat_input').value
-    socket.emit('chat', chatId, username, chatText)
+    socket.emit('chat', chatId, visitorUsername, chatText)
 }
 
 /**
@@ -94,52 +92,55 @@ const writeOnHistory = (text) => {
 }
 
 /**
- * Gets current username from IndexedDB
+ * Verifies if the current user created the visited sighting,
+ * and allows updating the identification if true. It also
+ * connects to the chat room where the visitor username serves
+ * as a chat username
+ * @param username
  */
-const getUsername = () => {
-    const localIDB = requestIDB.result
-    const transaction = localIDB.transaction(["usernames"], "readwrite")
-    const localStore = transaction.objectStore("usernames")
-    const getRequest = localStore.get(1)
-    getRequest.addEventListener("success", () => {
-        username = getRequest.result.username
-        console.log(username)
+const setVisitorUsername = (username) => {
+    visitorUsername = username
 
-        // check if the current username created the sighting
-        // allow updating identification if yes
-        const author = document.getElementById("author_nickname").innerHTML
-        if (username === author) {
-            showDialogButton.style.display = "inline"
-            showDialogButton.addEventListener("click", () => {
-                dialog.showModal()
+    // check if the current username created the sighting
+    // allow updating identification if yes
+    if (visitorUsername === author) {
+        showDialogButton.style.display = "inline"
+        showDialogButton.addEventListener("click", () => {
+            dialog.showModal()
+        })
+    } else {
+        showDialogButton.style.display = "none"
+    }
+
+    // connect to chat room when username retrieved from IndexedDB
+    connectToRoom()
+    // and enable sending chat messages
+    sendChatButton.addEventListener('click', sendChatText)
+}
+
+/**
+ * Opens IndexedDB database and registers service worker
+ */
+const initSighting = () => {
+    // Check for indexedDB support
+    if ('indexedDB' in window) {
+        // Get username from the database when opened and verify if is the author,
+        // also use it as the chat username
+        initIndexedDB(() => {
+            getUsername( (username) => {
+                setVisitorUsername(username)
             })
-        } else {
-            showDialogButton.style.display = "none"
-        }
+        })
+    } else {
+        console.log('This browser doesn\'t support IndexedDB')
+    }
 
-        // connect to chat room when username retrieved from IndexedDB
-        connectToRoom()
-    })
+    // Register service worker
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    }
 }
 
-const handleSuccess = () => {
-    console.log('Database opened')
-    initChat()
-}
-
-const handleUpgrade = (ev) => {
-    const db = ev.target.result
-    db.createObjectStore("usernames", { keyPath: "id" })
-    db.createObjectStore("sightings", { keyPath: "id", autoIncrement: true})
-    console.log('Upgraded object store')
-}
-
-const requestIDB = indexedDB.open("local")
-requestIDB.addEventListener("upgradeneeded", handleUpgrade)
-requestIDB.addEventListener("success", handleSuccess)
-requestIDB.addEventListener("error", (err) => {
-    console.log("ERROR : " + JSON.stringify(err))
-})
-
-sendChatButton.addEventListener('click', sendChatText)
+initChat()
+initSighting()
 initMap()

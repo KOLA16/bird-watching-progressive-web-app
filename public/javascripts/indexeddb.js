@@ -5,13 +5,6 @@ const SIGHTINGS_STORE_NAME = 'sightings'
 // Stores database open request object
 let requestIDB
 
-//const test = (callback) => {
-//    const localIDB = requestIDB.result
-//    const transaction = localIDB.transaction([USER_STORE_NAME], "readwrite")
-//    const localStore = transaction.objectStore(USER_STORE_NAME)
-//}
-//window.test = test
-
 /**
  * Generates initial random username ('Username${randomNumber}), and
  * stores it in database
