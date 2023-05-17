@@ -9,7 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -38,46 +38,45 @@
         </form>
     </div>
 
-
-    <!-- Table with all sightings -->
-    <table class="table table-hover align-middle table-sm" id="sightings_table">
-        <thead class="table-light">
-            <th>Bird Sighting</th>
-            <th onclick="sortTable(1, true)" class="clickable">
-                Datetime
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-chevron-expand" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z" />
-                </svg>
-            </th>
-            <th onclick="sortTable(2, false)" class="clickable">
-                Identification
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-chevron-expand" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z" />
-                </svg>
-            </th>
-            <th>User</th>
-        </thead>
-        <% sightings.forEach((sighting, i)=> {%>
-            <tr class="clickable clickable-row" data-href='/sighting?id=<%= sighting._id %>'>
-                <td>
-                    <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img' width="250" height="200">
-                </td>
-                <td>
-                    <%= moment(sighting.observation_date).format('D MMM H:mm') %>
-                </td>
-                <td>
-                    <%= sighting.identification %>
-                </td>
-                <td>
-                    <%= sighting.user_nickname %>
-                </td>
-            </tr>
-            <% }); %>
-    </table>
+<!-- Table with all sightings -->
+<table class="table table-hover align-middle table-sm" id="sightings_table">
+    <thead class="table-light">
+    <th>Image</th>
+    <th onclick="sortTable(1, true)" class="clickable">
+        Datetime
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-chevron-expand" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z" />
+        </svg>
+    </th>
+    <th onclick="sortTable(2, false)" class="clickable">
+        Identification
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-chevron-expand" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M3.646 9.146a.5.5 0 0 1 .708 0L8 12.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708zm0-2.292a.5.5 0 0 0 .708 0L8 3.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708z" />
+        </svg>
+    </th>
+    <th>User</th>
+    </thead>
+    <% sightings.forEach((sighting, i)=> {%>
+        <tr class="clickable clickable-row" data-href='/sighting?id=<%= sighting._id %>'>
+            <td>
+                <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img' width="250" height="200">
+            </td>
+            <td>
+                <%= moment(sighting.observation_date).format('D MMM H:mm') %>
+            </td>
+            <td>
+                <%= sighting.identification %>
+            </td>
+            <td>
+                <%= sighting.user_nickname %>
+            </td>
+        </tr>
+    <% }); %>
+</table>
 
 <div>
     <footer>

@@ -1,18 +1,34 @@
 let map
 
+// form inputs
 const authorInput = document.getElementById("author")
-const mapWindow = document.getElementById("map")
+const dateInput = document.getElementById("obs_date")
 const latInput = document.getElementById("lat")
 const lngInput = document.getElementById("lng")
-const offLabel = document.getElementById("offline_label")
+const identificationInput = document.getElementById("bird_species")
+const descInput = document.getElementById("desc")
+const imgInput = document.getElementById("img")
 
-window.addEventListener("offline", () => {
+const mapWindow = document.getElementById("map")
+const offLabel = document.getElementById("offline_label")
+const submitBtn = document.getElementById("submit_sighting_btn")
+
+
+// TODO: FIND BETTER SOLUTION TO ENSURE MAP ALWAYS HIDDEN WHEN OFFLINE
+window.addEventListener('offline', () => {
     // TODO: Change to use HTML5 Geolocation instead,
     //  i.e. use the latest online registered location
     mapWindow.style.display = 'none'
     offLabel.style.display = 'inline'
     latInput.style.display = 'inline'
     lngInput.style.display = 'inline'
+})
+
+window.addEventListener('online', () => {
+    mapWindow.style.display = 'block'
+    offLabel.style.display = 'none'
+    latInput.style.display = 'none'
+    lngInput.style.display = 'none'
 })
 
 /**
@@ -64,12 +80,32 @@ const placeMarker = (latLng, map, marker) => {
 }
 
 /**
+ * Get form input values and add sighting to the database
+ */
+const addToDatabase = () => {
+    const formInputs = {
+        'author': authorInput.value,
+        'obs_date': dateInput.value,
+        'lat': latInput.value,
+        'lng': lngInput.value,
+        'bird_species': identificationInput.value,
+        'desc': descInput.value,
+        'img': imgInput.value,
+        'flag': 'online' // indicates that sighting was created when a user was online
+    }
+    addSighting(formInputs)
+}
+
+/**
  * Sets the current user as an author
  * of the sighting that is being created
  * @param username
  */
 const setAuthor = (username) => {
     authorInput.value = username
+
+    // Enable adding sightings to the local database
+    // submitBtn.addEventListener('click', addToDatabase)
 }
 
 /**

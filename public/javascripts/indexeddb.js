@@ -8,8 +8,9 @@ let requestIDB
 /**
  * Generates initial random username ('Username${randomNumber}), and
  * stores it in database
+ * @param writeSuccessCallback
  */
-const addRandomUsername = () => {
+const addRandomUsername = (writeSuccessCallback) => {
     const localIDB = requestIDB.result
     const transaction = localIDB.transaction([USER_STORE_NAME], "readwrite")
     const localStore = transaction.objectStore(USER_STORE_NAME)
@@ -20,7 +21,7 @@ const addRandomUsername = () => {
 
     const addRequest = localStore.add({id: 1, username: username})
     addRequest.addEventListener("success", () => {
-        console.log('Username set to: ' + username)
+        writeSuccessCallback()
     })
 }
 window.addRandomUsername = addRandomUsername
@@ -59,6 +60,52 @@ const getUsername = (readSuccessCallback) => {
 window.getUsername = getUsername
 
 /**
+ * Add a new sighting to the database using form input values
+ * @param formInputs
+ * @param writeSuccessCallback
+ */
+const addSighting = (formInputs) => {
+    const localIDB = requestIDB.result
+    const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
+    const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
+
+    const addRequest = localStore.add( {
+        author: formInputs.author,
+        obs_date: formInputs.obs_date,
+        lat: formInputs.lat,
+        lng: formInputs.lng,
+        identification: formInputs.bird_species,
+        desc: formInputs.desc,
+        img: formInputs.img,
+        chat_history: [],
+        flag: formInputs.flag
+    })
+    addRequest.addEventListener('success', () => {
+        console.log('Added new sighting to indexedDB')
+    })
+}
+window.addSighting = addSighting
+
+/**
+ * Gets all sightings from the database
+ */
+const getSightings = (readSuccessCallback) => {
+    const localIDB = requestIDB.result
+    const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
+    const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
+
+    const getAllRequest = localStore.getAll()
+    getAllRequest.addEventListener('success', () => {
+        console.log('Get sightings from indexeddb')
+        const sightings = getAllRequest.result
+        for (const sighting of sightings) {
+            readSuccessCallback(sighting)
+        }
+    })
+}
+window.getSightings = getSightings
+
+/**
  * Creates necessary object stores
  * @param ev
  */
@@ -83,3 +130,5 @@ const initIndexedDB = (openSuccessCallback) => {
     })
 }
 window.initIndexedDB = initIndexedDB
+
+//export { initIndexedDB, getUsername, changeUsername, addRandomUsername }

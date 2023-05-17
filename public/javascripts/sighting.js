@@ -1,3 +1,5 @@
+//import {initIndexedDB, getUsername} from "./indexeddb"
+
 let map
 let visitorUsername = null
 let chatId = null

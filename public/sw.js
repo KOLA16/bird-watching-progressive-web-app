@@ -1,6 +1,11 @@
 const CACHE_NAME = `bird-watching-v1`
+const DB_NAME = 'local'
+const USER_STORE_NAME = 'usernames'
+const SIGHTINGS_STORE_NAME = 'sightings'
 
 let requestIDB
+
+// self.importScripts('./javascripts/indexeddb.js')
 
 // Use the install event to pre-cache all initial resources.
 self.addEventListener('install', event => {
@@ -14,6 +19,7 @@ self.addEventListener('install', event => {
                 '/javascripts/add.js',
                 '/javascripts/sighting.js',
                 '/javascripts/sightings.js',
+                '/javascripts/indexeddb.js',
                 '/stylesheets/style.css',
                 '/uploads/image-not-available.jpg'
             ])
@@ -25,24 +31,10 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
 
-    const handleSuccess = () => {
-        console.log('Database opened')
-    }
-
-    const handleUpgrade = (ev) => {
-        const db = ev.target.result
-        db.createObjectStore("usernames", { keyPath: "id" })
-        db.createObjectStore("sightings", { keyPath: "id", autoIncrement: true})
-        console.log('Upgraded object store')
-    }
+    //initIndexedDB(() => {console.log('SW: Database Opened')})
 
     // Open indexedDB
-    requestIDB = indexedDB.open("local")
-    requestIDB.addEventListener("upgradeneeded", handleUpgrade)
-    requestIDB.addEventListener("success", handleSuccess)
-    requestIDB.addEventListener("error", (err) => {
-        console.log("ERROR : " + JSON.stringify(err))
-    })
+    initIndexedDB()
 })
 
 self.addEventListener('fetch', event => {
@@ -85,7 +77,7 @@ self.addEventListener('fetch', event => {
                 // Request background sync of sightings
                 await requestBackgroundSync('sync-sightings')
 
-                return cache.match('/add')
+                return cache.match('/')
 
             } else {
                 // Return 'sorry, no connection :(' page if resource can not be accessed offline
@@ -105,8 +97,23 @@ self.addEventListener('sync', event => {
     }
 })
 
+/**
+ * Registers sync event with a provided tag.
+ * @param tag string representing tag name
+ * @returns {Promise<void>}
+ */
+const requestBackgroundSync = async (tag) => {
+    await self.registration.sync.register(tag)
+}
 
+/////// **** Service Worker IndexedDB operations **** ///////
 
+/**
+ * Takes the add new sighting request when offline and stores it in
+ * IndexedDB
+ * @param requestClone
+ * @returns {Promise<void>}
+ */
 const addSighting = async (requestClone) => {
 
     try {
@@ -119,10 +126,10 @@ const addSighting = async (requestClone) => {
         }
 
         const localIDB = requestIDB.result
-        const transaction = localIDB.transaction(["sightings"], "readwrite")
-        const localStore = transaction.objectStore("sightings")
+        const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
+        const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
 
-        const putRequest = localStore.add({
+        const addRequest = localStore.add({
             author: formValues[0],
             obs_date: formValues[1],
             lat: formValues[2],
@@ -130,10 +137,10 @@ const addSighting = async (requestClone) => {
             bird_species: formValues[4],
             desc: formValues[5],
             img: formValues[6],
-            chat_history: []
+            chat_history: [],
         })
 
-        putRequest.addEventListener("success", () => {
+        addRequest.addEventListener("success", () => {
             console.log('Sighting successfully added to the IndexedDB')
         })
     } catch (err) {
@@ -141,12 +148,15 @@ const addSighting = async (requestClone) => {
     }
 }
 
+/**
+ * Retrieve sightings stored locally in the IndexedDB and
+ * send them to the server MongoDB database. If server updated successfully,
+ * it also deletes the sightings stored in IndexedDB.
+ */
 const updateServer = () => {
-    console.log('updateServer called')
-
     const localIDB = requestIDB.result
-    const transaction = localIDB.transaction(["sightings"], "readwrite")
-    const localStore = transaction.objectStore("sightings")
+    const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
+    const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
 
     const getAllRequest = localStore.getAll()
 
@@ -170,8 +180,8 @@ const updateServer = () => {
                 if (fetchResponse.ok) {
                     // Delete sightings from indexedDB if post successful
                     // Need to open new transaction because the previous one terminates
-                    const transaction = localIDB.transaction(["sightings"], "readwrite")
-                    const localStore = transaction.objectStore("sightings")
+                    const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
+                    const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
                     const deleteRequest = localStore.delete(sighting.id)
                     deleteRequest.addEventListener('success', () => {
                         console.log('Sighting deleted from indexedDB', sighting)
@@ -182,11 +192,21 @@ const updateServer = () => {
     })
 }
 
-/**
- * Registers sync event with a provided tag.
- * @param tag string representing tag name
- * @returns {Promise<void>}
- */
-const requestBackgroundSync = async (tag) => {
-    await self.registration.sync.register(tag)
+
+const handleUpgrade = (ev) => {
+    const db = ev.target.result
+    db.createObjectStore(USER_STORE_NAME, { keyPath: "id" })
+    db.createObjectStore(SIGHTINGS_STORE_NAME, { keyPath: "id", autoIncrement: true})
+    console.log('Upgraded object store')
+}
+
+const initIndexedDB = () => {
+    requestIDB = indexedDB.open(DB_NAME)
+    requestIDB.addEventListener("upgradeneeded", handleUpgrade)
+    requestIDB.addEventListener("success", () => {
+        console.log("Database opened (SW).")
+    })
+    requestIDB.addEventListener("error", (err) => {
+        console.log("ERROR : " + JSON.stringify(err))
+    })
 }

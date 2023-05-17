@@ -5,6 +5,7 @@ const Sighting = require('../models/sighting')
 // Handle Sighting create on POST.
 exports.sighting_create_post = async (req, res) => {
     const formData = req.body
+
     // Set to null if image not uploaded
     const imgPath = req.file ? req.file.path : null
 
