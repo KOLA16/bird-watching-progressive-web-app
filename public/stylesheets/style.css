@@ -4,6 +4,33 @@
   background-color: #333;
 }
 
+nav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav li a:hover {
+  background-color: #111;
+}
+
 /* Style the links inside the navigation bar */
 .navbar a {
   float: left;
@@ -38,8 +65,8 @@ a {
  * that contains the map.
  */
 #map {
-  height: 300px;
-  width: 600px;
+  height: 150px;
+  width: 300px;
 }
 
 #sighting_img {
@@ -63,4 +90,80 @@ a {
   position: absolute;
   bottom: 10px;
   width: 90%;
+}
+/* Style the form inside sightings  */
+#username_form {
+  color: green;
+}
+
+#username_input {
+  border: 1px solid green;
+  padding: 10px;
+  font-size: 16px;
+}
+
+#username_btn_set {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#username_btn_set:hover {
+  background-color: darkgreen;
+}
+
+#adding_form {
+  max-width: 400px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#adding_form p {
+  margin: 10px 0;
+}
+
+#adding_form label {
+  font-weight: bold;
+}
+
+#adding_form input[type="datetime-local"],
+#adding_form select,
+#adding_form input[type="text"],
+#adding_form input[type="file"],
+#adding_form button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#adding_form button {
+  background-color: green;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#adding_form button:hover {
+  background-color: darkgreen;
+}
+
+.container1 {
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+
+#add {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
 }

@@ -11,13 +11,11 @@
 <body>
 
 <!-- Navigation Bar -->
-<header class="navbar">
-    <a href="/">Home</a>
-    <a href="/add">Add Sighting</a>
-</header>
+<% include navbar %>
 
 <main>
-    <div id="container">
+    <div class="container1">
+    <div id="add">
     <h1><%= title %></h1>
     <form id="adding_form" enctype="multipart/form-data" method="post" action="/add">
         <input type="hidden" name="author" id="author" value="Unknown">
@@ -53,13 +51,13 @@
         <button type="submit" id="submit_sighting_btn">Add Sighting</button>
     </form>
     </div>
+    </div>
 </main>
 
-<div>
-    <footer>
-        <p>© 2023 Bird Watching. All Rights Reserved.</p>
-    </footer>
-</div>
+
+<footer>
+    <p>© 2023 Bird Watching. All Rights Reserved.</p>
+</footer>
 
 <!-- Load Google Maps API -->
 <script>

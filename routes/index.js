@@ -44,4 +44,9 @@ router.post('/sighting', (req, res, next) => {
   sighting.sighting_update_identification(req, res)
 })
 
+app.get('/sightings', (req, res) => {
+  res.render('sightings');
+});
+
+
 module.exports = router
