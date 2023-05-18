@@ -37,26 +37,36 @@ self.addEventListener('activate', event => {
     initIndexedDB()
 })
 
+/**
+ * Implements simple network-first caching strategy.
+ */
 self.addEventListener('fetch', event => {
     const requestClone = event.request.clone()
     const requestUrl = event.request.url
     const requestMethod = event.request.method
+    const requestMode = event.request.mode
 
     const addUrl = "/add"
 
     event.respondWith((async () => {
+        const cache = await caches.open(CACHE_NAME)
 
         try {
 
             // Try network first.
             const fetchResponse = await fetch(event.request)
 
-            // TODO: Update cache with network responses
+            // Update cache with network responses, but only if
+            // response code in the range 200-299 to avoid caching
+            // of 'opaque' resources such as Google Maps,
+            // and avoid caching of any Cross-Origin Resources
+            if (fetchResponse.ok && requestMode != 'cors') {
+                cache.put(event.request, fetchResponse.clone())
+            }
 
             return fetchResponse
         } catch (err) {
             // The network failed, so try cache
-            const cache = await caches.open(CACHE_NAME)
             const cachedResponse = await cache.match(event.request)
 
             // If matching request found in cache, cachedResponse resolves
