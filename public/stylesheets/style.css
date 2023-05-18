@@ -23,10 +23,10 @@
   cursor: pointer;
 }
 
-td > img {
-  width: 250px;
-  height: 200px;
-}
+/*td > img {*/
+/*  width: 12em;*/
+/*  height: auto;*/
+/*}*/
 
 footer {
   overflow: hidden;
@@ -39,7 +39,7 @@ footer p {
 }
 
 body {
-  padding: 50px;
+  padding: 1em;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -56,9 +56,19 @@ a {
   width: 600px;
 }
 
-#sighting_img {
-  height: 300px;
-  width: 600px;
+#sightings_table {
+  width: 95%;
+
+}
+
+#sightings_table td {
+  text-align: center;
+  padding: 1em;
+}
+
+#sightings_table img {
+  max-width: 50%;
+  height: auto;
 }
 
 /*
