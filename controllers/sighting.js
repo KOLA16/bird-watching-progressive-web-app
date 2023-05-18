@@ -2,7 +2,13 @@ const moment = require('moment');
 
 const Sighting = require('../models/sighting')
 
-// Handle Sighting create on POST.
+/**
+ * Handles POST request to create new sighting in the database,
+ * and redirects to the main (/) page after success
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.sighting_create_post = async (req, res) => {
     const formData = req.body
 
@@ -31,7 +37,13 @@ exports.sighting_create_post = async (req, res) => {
     }
 }
 
-// Handle Sighting identification UPDATE.
+/**
+ * Handles request to update sighting identification,
+ * and reloads the sighting page after the update
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.sighting_update_identification = async (req, res) => {
     const sighting_id = req.body.sighting_id
     const new_identification = req.body.new_identification
@@ -44,7 +56,11 @@ exports.sighting_update_identification = async (req, res) => {
     }
 }
 
-// Handle Sighting chat history UPDATE.
+/**
+ * Adds each new chat message to the corresponding sighting in the database
+ * @param chatDetails
+ * @returns {Promise<void>}
+ */
 exports.sighting_update_chat_history = async (chatDetails) => {
     const sighting_id = chatDetails.sighting_id
     const chat_username = chatDetails.chat_username
@@ -62,7 +78,13 @@ exports.sighting_update_chat_history = async (chatDetails) => {
     }
 }
 
-// Handle Sighting GET.
+/**
+ * Gets details of the selected sighting from the database and
+ * renders the sighting page
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.sighting_get = async (req, res) => {
     let sighting_id = req.query.id
 
@@ -91,7 +113,12 @@ exports.sighting_get = async (req, res) => {
     }
 }
 
-// Handle all Sightings GET.
+/**
+ * Gets all sightings from the database and renders the main page
+ * @param req
+ * @param res
+ * @returns {Promise<void>}
+ */
 exports.sightings_get = async (req, res) => {
     try {
         const sightings = await Sighting.find({}).sort({ observation_date: -1,  }).exec()
