@@ -119,7 +119,7 @@ const initAdd = () => {
 
 window.addEventListener('load', () => {
     // Hides map and displays manual geolocation inputs
-// if user goes offline when he is on the /add page
+    // if user goes offline when he is on the /add page
     window.addEventListener('offline', () => {
         // TODO: Change to use HTML5 Geolocation instead,
         //  i.e. use the latest online registered location

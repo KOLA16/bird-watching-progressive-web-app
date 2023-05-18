@@ -77,7 +77,7 @@ self.addEventListener('fetch', event => {
             // response code in the range 200-299 to avoid caching
             // of 'opaque' resources such as Google Maps,
             // and avoid caching of any Cross-Origin Resources
-            if (fetchResponse.ok && requestMode != 'cors') {
+            if (fetchResponse.ok && requestMode !== 'cors') {
                 cache.put(event.request, fetchResponse.clone())
             }
 

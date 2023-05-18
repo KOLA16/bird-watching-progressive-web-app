@@ -1,12 +1,9 @@
 const usernameInput = document.getElementById("username_input")
 const usernameBtn = document.getElementById("username_btn_set")
 const sightingsTable = document.getElementById("sightings_table")
-
-$(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});
+const dateHeader = document.getElementById("date-header")
+dateHeader.addEventListener("click", sortByDate)
+let ascendingOrder = true
 
 /**
  * Adds event listener to the button changing the initial
@@ -26,8 +23,10 @@ const enableChangeUsername = () => {
 const appendToTable = (sighting) => {
     // Insert new row to the end of the table
     const newRow = sightingsTable.insertRow(-1)
-    newRow.className = "clickable clickable-row"
-    newRow.setAttribute("data-href", `/sighting?id=${sighting._id}`)
+    newRow.className = 'sighting-row'
+    newRow.addEventListener('click', () => {
+        window.location.href = `/sighting?id=${sighting._id}`
+    })
 
     // The row <td> elements (cells)
     const td1 = newRow.insertCell(0)
@@ -41,6 +40,38 @@ const appendToTable = (sighting) => {
     td3.innerHTML = sighting.bird_species
     td4.innerHTML = sighting.author
 }
+
+/**
+ * Sorts table rows by date in ascending/descending order
+ */
+const sortByDate = () => {
+    const tableBody = sightingsTable.getElementsByTagName("tbody")[0]
+    const rows = Array.from(tableBody.getElementsByTagName('tr'))
+
+    rows.sort((a, b) => {
+        let dateA = new Date(a.cells[1].textContent)
+        let dateB = new Date(b.cells[1].textContent)
+        if (ascendingOrder) {
+            return dateA - dateB
+        } else {
+            return dateB - dateA
+        }
+    })
+
+    // Clear existing table body
+    while (tableBody.firstChild) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+
+    // Append sorted rows to the table body
+    rows.forEach((row) => {
+        tableBody.appendChild(row)
+    })
+
+    // Toggle sort order
+    ascendingOrder = !ascendingOrder
+}
+
 
 /**
  * Opens IndexedDB database and registers service worker
