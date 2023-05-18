@@ -33,9 +33,11 @@ const appendToTable = (sighting) => {
     const td3 = newRow.insertCell(2)
     const td4 = newRow.insertCell(3)
 
-    // Append anchors as the cells children
-    console.log(sighting.img)
-    td1.innerHTML = sighting.img
+    // Fill cells with sighting info retrieved from local database,
+    // except image which is not available
+    const img = document.createElement('img')
+    img.src = '/uploads/image-not-available.jpg'
+    td1.appendChild(img)
     td2.innerHTML = moment(sighting.obs_date).format('D MMM H:mm')
     td3.innerHTML = sighting.bird_species
     td4.innerHTML = sighting.author

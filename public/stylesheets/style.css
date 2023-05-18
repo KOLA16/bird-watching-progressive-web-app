@@ -23,6 +23,11 @@
   cursor: pointer;
 }
 
+td > img {
+  width: 250px;
+  height: 200px;
+}
+
 footer {
   overflow: hidden;
   background-color: #333;
