@@ -1,40 +1,56 @@
 const CACHE_NAME = `bird-watching-v1`
+const PRE_CACHED_RESOURCES = [ '/',
+    '/add',
+    '/no_connection.html',
+    '/javascripts/add.js',
+    '/javascripts/sighting.js',
+    '/javascripts/sightings.js',
+    '/javascripts/indexeddb.js',
+    '/stylesheets/style.css',
+    '/uploads/image-not-available.jpg'
+]
+
 const DB_NAME = 'local'
 const USER_STORE_NAME = 'usernames'
 const SIGHTINGS_STORE_NAME = 'sightings'
-
 let requestIDB
 
-// self.importScripts('./javascripts/indexeddb.js')
-
-// Use the install event to pre-cache all initial resources.
+/**
+ * Uses 'install' event to pre-cache all the required static resources
+ */
 self.addEventListener('install', event => {
     event.waitUntil((async () => {
         try {
             const cache = await caches.open(CACHE_NAME)
-            const addAll = await cache.addAll([
-                '/',
-                '/add',
-                '/no_connection.html',
-                '/javascripts/add.js',
-                '/javascripts/sighting.js',
-                '/javascripts/sightings.js',
-                '/javascripts/indexeddb.js',
-                '/stylesheets/style.css',
-                '/uploads/image-not-available.jpg'
-            ])
+            const addAll = await cache.addAll(PRE_CACHED_RESOURCES)
         } catch (err) {
             console.log('Error when pre-caching static resources: ' + err)
         }
     })())
 })
 
+/**
+ * Opens indexedDB database on the 'activate' event, and it also
+ * clears old caches
+ */
 self.addEventListener('activate', event => {
-
-    //initIndexedDB(() => {console.log('SW: Database Opened')})
-
     // Open indexedDB
     initIndexedDB()
+
+    // Clear old caches
+    event.waitUntil((async () => {
+        try {
+            const names = await caches.keys()
+            await Promise.all(names.map(name => {
+                if (name !== CACHE_NAME) {
+                    // If a cache's name is the current name, delete it.
+                    return caches.delete(name)
+                }
+            }))
+        } catch (err) {
+            console.log('Failed to clear old caches: ' + err)
+        }
+    })())
 })
 
 /**
@@ -93,12 +109,18 @@ self.addEventListener('fetch', event => {
     })())
 })
 
+/**
+ * Listens to the 'sync' event, and updates server database
+ * with the new resources added by user when he was offline
+ */
 self.addEventListener('sync', event => {
     console.log('Sync event triggered: ' + event.tag)
 
+    // Add sightings stored locally to the server
     if (event.tag === 'sync-sightings') {
         event.waitUntil(updateServer())
     } else if (event.tag === 'sync-chats') {
+        // TODO: syncing chat messages added offline
         console.log('Sync chat messages.')
     }
 })
@@ -112,7 +134,7 @@ const requestBackgroundSync = async (tag) => {
     await self.registration.sync.register(tag)
 }
 
-/////// **** Service Worker IndexedDB operations **** ///////
+/////// **** Database interactions **** ///////
 
 /**
  * Takes the add new sighting request when offline and stores it in

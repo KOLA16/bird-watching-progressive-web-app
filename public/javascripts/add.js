@@ -59,6 +59,9 @@ const placeMarker = (latLng, map, marker) => {
     // Fill location form field with marker coordinates
     latInput.value = latLng.lat()
     lngInput.value = latLng.lng()
+
+    console.log(latInput.value)
+    console.log(lngInput.value)
 }
 
 /**
@@ -113,40 +116,44 @@ const initAdd = () => {
 }
 
 //// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
-// Hides map and displays manual geolocation inputs
+
+window.addEventListener('load', () => {
+    // Hides map and displays manual geolocation inputs
 // if user goes offline when he is on the /add page
-window.addEventListener('offline', () => {
-    // TODO: Change to use HTML5 Geolocation instead,
-    //  i.e. use the latest online registered location
-    mapWindow.style.display = 'none'
-    offLabel.style.display = 'inline'
-    latInput.style.display = 'inline'
-    lngInput.style.display = 'inline'
-})
+    window.addEventListener('offline', () => {
+        // TODO: Change to use HTML5 Geolocation instead,
+        //  i.e. use the latest online registered location
+        mapWindow.style.display = 'none'
+        offLabel.style.display = 'inline'
+        latInput.style.display = 'inline'
+        lngInput.style.display = 'inline'
+    })
 
 // Shows map and hides manual geolocation inputs
 // if user goes online when he is on the /add page
-window.addEventListener('online', () => {
-    mapWindow.style.display = 'block'
-    offLabel.style.display = 'none'
-    latInput.style.display = 'none'
-    lngInput.style.display = 'none'
-})
+    window.addEventListener('online', () => {
+        mapWindow.style.display = 'block'
+        offLabel.style.display = 'none'
+        latInput.style.display = 'none'
+        lngInput.style.display = 'none'
+    })
 
 // Checking the online status with navigator,
 // allows to hide the map even if user enters the /add page,
 // but he is already offline
-if (!navigator.onLine) {
-    mapWindow.style.display = 'none'
-    offLabel.style.display = 'inline'
-    latInput.style.display = 'inline'
-    lngInput.style.display = 'inline'
-} else {
-    mapWindow.style.display = 'block'
-    offLabel.style.display = 'none'
-    latInput.style.display = 'none'
-    lngInput.style.display = 'none'
-}
+    if (!navigator.onLine) {
+        mapWindow.style.display = 'none'
+        offLabel.style.display = 'inline'
+        latInput.style.display = 'inline'
+        lngInput.style.display = 'inline'
+    } else {
+        mapWindow.style.display = 'block'
+        offLabel.style.display = 'none'
+        latInput.style.display = 'none'
+        lngInput.style.display = 'none'
+    }
+})
+
 
 initAdd()
 initMap()
