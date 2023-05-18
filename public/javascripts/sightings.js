@@ -2,7 +2,6 @@ const usernameInput = document.getElementById("username_input")
 const usernameBtn = document.getElementById("username_btn_set")
 const sightingsTable = document.getElementById("sightings_table")
 const dateHeader = document.getElementById("date-header")
-dateHeader.addEventListener("click", sortByDate)
 let ascendingOrder = true
 
 /**
@@ -35,6 +34,7 @@ const appendToTable = (sighting) => {
     const td4 = newRow.insertCell(3)
 
     // Append anchors as the cells children
+    console.log(sighting.img)
     td1.innerHTML = sighting.img
     td2.innerHTML = moment(sighting.obs_date).format('D MMM H:mm')
     td3.innerHTML = sighting.bird_species
@@ -71,6 +71,7 @@ const sortByDate = () => {
     // Toggle sort order
     ascendingOrder = !ascendingOrder
 }
+dateHeader.addEventListener("click", sortByDate)
 
 
 /**
