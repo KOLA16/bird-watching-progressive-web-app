@@ -4,6 +4,7 @@
     <title><%= title %></title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
     <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
     <script type="module" src="/javascripts/indexeddb.js"></script>
@@ -40,6 +41,8 @@
     </p>
     <button id="show_dialog_btn">Change Identification</button>
     <p>Description: <%= description %></p>
+    <p>DBPedia abstract: <%= abstract %></p>
+    <p>Wiki link:</p> <a href="<%= link %>"><%= link %></a>
 </div>
 
 <!-- modal dialog containing a form to update identification -->
@@ -48,10 +51,7 @@
         <input type="text" name="sighting_id" value="<%= sightingId %>" style="display: none">
         <select id="new_identification" name="new_identification">
             <option value="Unknown">Unknown</option>
-            <option value="Hawk">Hawk</option>
-            <option value="Eagle">Eagle</option>
-            <option value="Owl">Owl</option>
-            <option value="Falcon">Falcon</option>
+            <option value="Uncertain">Uncertain</option>
         </select>
         <button id="update_btn" type="submit">Update</button>
     </form>

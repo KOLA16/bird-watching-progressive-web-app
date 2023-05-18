@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
 
 /* GET add sighting page. */
 router.get('/add', (req, res, next) => {
-  res.render('add', { title: 'Add new bird sighting' })
+  sighting.add_get(req, res)
 })
 
 /* POST new sighting to the database. */

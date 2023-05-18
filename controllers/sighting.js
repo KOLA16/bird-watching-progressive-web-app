@@ -1,4 +1,5 @@
-const moment = require('moment');
+const moment = require('moment')
+const https = require('https')
 
 const Sighting = require('../models/sighting')
 
@@ -79,8 +80,17 @@ exports.sighting_update_chat_history = async (chatDetails) => {
 }
 
 /**
+ *
+ * @param req
+ * @param res
+ */
+exports.add_get = (req, res) => {
+    res.render('add', {title: 'Add new bird sighting'})
+}
+
+/**
  * Gets details of the selected sighting from the database and
- * renders the sighting page
+ * passes it to function handling DBPedia information retrieval
  * @param req
  * @param res
  * @returns {Promise<void>}
@@ -90,27 +100,93 @@ exports.sighting_get = async (req, res) => {
 
     try {
         const selectedSighting = await Sighting.findById(sighting_id).exec()
-        // Display 'image not available' if image not provided
-        const img = selectedSighting.image ?
-            selectedSighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
+        get_dbpedia_info_and_render(res, sighting_id, selectedSighting, selectedSighting.identification)
 
-        res.render(
-            'sighting',
-            {
-                title: 'Sighting Page',
-                nickname: selectedSighting.user_nickname,
-                date: selectedSighting.observation_date,
-                lat: selectedSighting.location.coordinates[0],
-                lng: selectedSighting.location.coordinates[1],
-                identification: selectedSighting.identification,
-                description: selectedSighting.description,
-                image: img,
-                sightingId: sighting_id,
-                messages: selectedSighting.chat_history
-            })
     } catch (err) {
-        res.status(500).send('Sighting not found!')
+        res.status(500).send('Sighting not found!', err)
     }
+}
+
+/**
+ * Requests an abstract and wikipedia link from the DBPedia for the selected sighting
+ * and renders the sighting page with all the details
+ * @param res
+ * @param sighting_id
+ * @param selectedSighting
+ * @param identification
+ */
+const get_dbpedia_info_and_render = (res, sighting_id, selectedSighting, identification) => {
+
+    const sparqlQuery = `SELECT  ?wiki_link (REPLACE(?abstract, "@en", "") AS ?abstract) 
+    WHERE {
+      ?dbpedia_link rdf:type dbo:Bird ;
+                    foaf:isPrimaryTopicOf ?wiki_link ;
+                    dbp:name "${identification}"@en  ;
+                    dbo:abstract ?abstract .
+      FILTER(lang(?abstract) = 'en')
+    }`
+
+    const requestOptions = {
+        hostname: 'dbpedia.org',
+        path: '/sparql?query=' + encodeURIComponent(sparqlQuery),
+        headers: {
+            'Accept': 'application/json'
+        }
+    }
+
+    https.get(requestOptions, resp => {
+        let data = ''
+        let link = ''
+        let abstract = ''
+
+        resp.on('data', chunk => {
+            data += chunk
+
+            try {
+                // Get wikipedia link
+                link = JSON.parse(data).results.bindings[0].wiki_link.value
+            } catch (err) {
+                link = 'Wiki Link Not Found'
+                console.log('Wiki link not available for: ', identification)
+            }
+
+            try {
+                // Get abstract
+                abstract = JSON.parse(data).results.bindings[0].abstract.value
+            } catch (err) {
+                abstract = 'Abstract Not Found'
+                console.log('Abstract not available for: ', identification)
+            }
+
+        })
+
+        resp.on('end', () => {
+
+            // Display 'image not available' if image not provided
+            const img = selectedSighting.image ?
+                selectedSighting.image.replace('public', '') : '/uploads/image-not-available.jpg'
+
+            res.render(
+                'sighting',
+                {
+                    title: 'Sighting Page',
+                    nickname: selectedSighting.user_nickname,
+                    date: selectedSighting.observation_date,
+                    lat: selectedSighting.location.coordinates[0],
+                    lng: selectedSighting.location.coordinates[1],
+                    identification: selectedSighting.identification,
+                    abstract: abstract,
+                    link: link,
+                    description: selectedSighting.description,
+                    image: img,
+                    sightingId: sighting_id,
+                    messages: selectedSighting.chat_history
+                })
+        })
+
+        }).on('error', err => {
+        console.log('Error: ', err.message)
+    })
 }
 
 /**

@@ -141,6 +141,40 @@ const initSighting = () => {
     }
 }
 
+/**
+ * Gets all identifications from DBPedia knowledge graph
+ */
+const getALlIdentifications = () => {
+    const endpointUrl = "http://dbpedia.org/sparql";
+    const sparqlQuery = `
+    SELECT *
+    WHERE {
+        ?label rdfs:label "List of birds by common name"@en;
+        dbo:wikiPageWikiLink ?wikiLink.
+    }
+    `
+    const encodedQuery = encodeURIComponent(sparqlQuery);
+    const queryUrl = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+    $.ajax({
+        type: "GET",
+        url: queryUrl,
+        dataType: "json",
+        // contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            const results = response.results.bindings;
+            const bird_species = results.map((result) => {
+                const link = result.wikiLink.value;
+                return link.split('/').pop().replace(/_/g, ' ');
+            })
+            const sorted_bird_species = bird_species.sort();
+            $.each(sorted_bird_species, function (_, bird_specie) {
+                $('#new_identification').append(`<option value='${bird_specie}'>${bird_specie}</option>`);
+            });
+        }
+    });
+}
+
 //// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
 const mapWindow = document.getElementById("map")
 const offlineLoc = document.getElementById("offline-loc")
@@ -174,7 +208,9 @@ window.addEventListener('load', () => {
 
 })
 
-
+$(document).ready(function () {
+    getALlIdentifications()
+});
 
 initChat()
 initSighting()

@@ -7,7 +7,7 @@ const PRE_CACHED_RESOURCES = [ '/',
     '/javascripts/sightings.js',
     '/javascripts/indexeddb.js',
     '/stylesheets/style.css',
-    '/uploads/image-not-available.jpg'
+    '/uploads/image-not-available.jpg',
 ]
 
 const DB_NAME = 'local'

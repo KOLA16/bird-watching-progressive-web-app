@@ -2,16 +2,13 @@ let map
 
 // form inputs
 const authorInput = document.getElementById("author")
-const dateInput = document.getElementById("obs_date")
 const latInput = document.getElementById("lat")
 const lngInput = document.getElementById("lng")
-const identificationInput = document.getElementById("bird_species")
-const descInput = document.getElementById("desc")
-const imgInput = document.getElementById("img")
 
 const mapWindow = document.getElementById("map")
 const offLabel = document.getElementById("offline_label")
-const submitBtn = document.getElementById("submit_sighting_btn")
+const offOption = document.getElementById("offline-option")
+
 
 /**
  * Initialises Google Maps map centered over Sheffield, which can be clicked
@@ -59,26 +56,40 @@ const placeMarker = (latLng, map, marker) => {
     // Fill location form field with marker coordinates
     latInput.value = latLng.lat()
     lngInput.value = latLng.lng()
-
-    console.log(latInput.value)
-    console.log(lngInput.value)
 }
 
 /**
- * Get form input values and add sighting to the database
+ * Gets all identifications from DBPedia knowledge graph
  */
-const addToDatabase = () => {
-    const formInputs = {
-        'author': authorInput.value,
-        'obs_date': dateInput.value,
-        'lat': latInput.value,
-        'lng': lngInput.value,
-        'bird_species': identificationInput.value,
-        'desc': descInput.value,
-        'img': imgInput.value,
-        'flag': 'online' // indicates that sighting was created when a user was online
+const getALlIdentifications = () => {
+    const endpointUrl = "http://dbpedia.org/sparql";
+    const sparqlQuery = `
+    SELECT *
+    WHERE {
+        ?label rdfs:label "List of birds by common name"@en;
+        dbo:wikiPageWikiLink ?wikiLink.
     }
-    addSighting(formInputs)
+    `
+    const encodedQuery = encodeURIComponent(sparqlQuery);
+    const queryUrl = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+    $.ajax({
+        type: "GET",
+        url: queryUrl,
+        dataType: "json",
+        // contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            const results = response.results.bindings;
+            const bird_species = results.map((result) => {
+                const link = result.wikiLink.value;
+                return link.split('/').pop().replace(/_/g, ' ');
+            })
+            const sorted_bird_species = bird_species.sort();
+            $.each(sorted_bird_species, function (_, bird_specie) {
+                $('#bird_species').append(`<option value='${bird_specie}'>${bird_specie}</option>`);
+            });
+        }
+    });
 }
 
 /**
@@ -88,9 +99,6 @@ const addToDatabase = () => {
  */
 const setAuthor = (username) => {
     authorInput.value = username
-
-    // Enable adding sightings to the local database
-    // submitBtn.addEventListener('click', addToDatabase)
 }
 
 /**
@@ -124,6 +132,7 @@ window.addEventListener('load', () => {
         // TODO: Change to use HTML5 Geolocation instead,
         //  i.e. use the latest online registered location
         mapWindow.style.display = 'none'
+        offOption.style.display = 'inline'
         offLabel.style.display = 'inline'
         latInput.style.display = 'inline'
         lngInput.style.display = 'inline'
@@ -133,6 +142,7 @@ window.addEventListener('load', () => {
 // if user goes online when he is on the /add page
     window.addEventListener('online', () => {
         mapWindow.style.display = 'block'
+        offOption.style.display = 'none'
         offLabel.style.display = 'none'
         latInput.style.display = 'none'
         lngInput.style.display = 'none'
@@ -143,17 +153,22 @@ window.addEventListener('load', () => {
 // but he is already offline
     if (!navigator.onLine) {
         mapWindow.style.display = 'none'
+        offOption.style.display = 'inline'
         offLabel.style.display = 'inline'
         latInput.style.display = 'inline'
         lngInput.style.display = 'inline'
     } else {
         mapWindow.style.display = 'block'
+        offOption.style.display = 'none'
         offLabel.style.display = 'none'
         latInput.style.display = 'none'
         lngInput.style.display = 'none'
     }
 })
 
+$(document).ready(function () {
+    getALlIdentifications()
+});
 
 initAdd()
 initMap()
