@@ -1,5 +1,3 @@
-//import {initIndexedDB, getUsername} from "./indexeddb"
-
 let map
 let visitorUsername = null
 let chatId = null
@@ -9,6 +7,8 @@ const sendChatButton = document.getElementById("chat_send")
 const showDialogButton = document.getElementById("show_dialog_btn")
 const dialog = document.getElementById("identification_dialog")
 const author = document.getElementById("author_nickname").innerHTML
+const mapWindow = document.getElementById("map")
+const offlineLoc = document.getElementById("offline-loc")
 
 
 const initMap = async () => {
@@ -141,6 +141,32 @@ const initSighting = () => {
     if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
     }
+}
+
+//// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
+// Hides map and displays geolocation as text
+// if user goes offline when he is on the /add page
+window.addEventListener('offline', () => {
+    mapWindow.style.display = 'none'
+    offlineLoc.style.display = 'block'
+})
+
+// Shows map and hides geolocation as text
+// if user goes online when he is on the /add page
+window.addEventListener('online', () => {
+    mapWindow.style.display = 'block'
+    offlineLoc.style.display = 'none'
+})
+
+// Checking the online status with navigator,
+// allows to hide the map even if user enters the /add page,
+// but he is already offline
+if (!navigator.onLine) {
+    mapWindow.style.display = 'none'
+    offlineLoc.style.display = 'block'
+} else {
+    mapWindow.style.display = 'block'
+    offlineLoc.style.display = 'none'
 }
 
 initChat()

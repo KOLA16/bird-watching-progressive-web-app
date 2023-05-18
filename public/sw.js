@@ -46,6 +46,7 @@ self.addEventListener('fetch', event => {
     const requestMethod = event.request.method
     const requestMode = event.request.mode
 
+
     const addUrl = "/add"
 
     event.respondWith((async () => {
@@ -75,15 +76,10 @@ self.addEventListener('fetch', event => {
             if (cachedResponse) {
                 return cachedResponse
             } else if (requestUrl.indexOf(addUrl) > -1 && requestMethod === "POST") {
-
-                // TODO: When reloading the page after online addition of sighting
-                // with each reload new copy of the sighting is added to indexedDB
-                // When back to online, the post is send to server and updates MongoDB
-                // with the last offline added sighting
-
                 // If post request from /add page store sighting in IndexedDB
-                // and stay on the add page
+                // and display main page
                 await addSighting(requestClone)
+
                 // Request background sync of sightings
                 await requestBackgroundSync('sync-sightings')
 

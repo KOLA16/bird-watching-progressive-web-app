@@ -22,6 +22,10 @@
 <div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
 <!--The div element for the map -->
 <div id="map"></div>
+<div id="offline-loc" style="display: none">
+    <label for="lat-off">Lat:</label><p id="lat-off"><%= lat %></p>
+    <label for="lng-off">Lng:</label><p id="lng-off"><%= lng %></p>
+</div>
 
 <!-- div with sighting details -->
 <div id="sighting_details">

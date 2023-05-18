@@ -13,24 +13,6 @@ const mapWindow = document.getElementById("map")
 const offLabel = document.getElementById("offline_label")
 const submitBtn = document.getElementById("submit_sighting_btn")
 
-
-// TODO: FIND BETTER SOLUTION TO ENSURE MAP ALWAYS HIDDEN WHEN OFFLINE
-window.addEventListener('offline', () => {
-    // TODO: Change to use HTML5 Geolocation instead,
-    //  i.e. use the latest online registered location
-    mapWindow.style.display = 'none'
-    offLabel.style.display = 'inline'
-    latInput.style.display = 'inline'
-    lngInput.style.display = 'inline'
-})
-
-window.addEventListener('online', () => {
-    mapWindow.style.display = 'block'
-    offLabel.style.display = 'none'
-    latInput.style.display = 'none'
-    lngInput.style.display = 'none'
-})
-
 /**
  * Initialises Google Maps map centered over Sheffield, which can be clicked
  * to select a sighting geolocation
@@ -128,6 +110,42 @@ const initAdd = () => {
     if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
     }
+}
+
+//// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
+// Hides map and displays manual geolocation inputs
+// if user goes offline when he is on the /add page
+window.addEventListener('offline', () => {
+    // TODO: Change to use HTML5 Geolocation instead,
+    //  i.e. use the latest online registered location
+    mapWindow.style.display = 'none'
+    offLabel.style.display = 'inline'
+    latInput.style.display = 'inline'
+    lngInput.style.display = 'inline'
+})
+
+// Shows map and hides manual geolocation inputs
+// if user goes online when he is on the /add page
+window.addEventListener('online', () => {
+    mapWindow.style.display = 'block'
+    offLabel.style.display = 'none'
+    latInput.style.display = 'none'
+    lngInput.style.display = 'none'
+})
+
+// Checking the online status with navigator,
+// allows to hide the map even if user enters the /add page,
+// but he is already offline
+if (!navigator.onLine) {
+    mapWindow.style.display = 'none'
+    offLabel.style.display = 'inline'
+    latInput.style.display = 'inline'
+    lngInput.style.display = 'inline'
+} else {
+    mapWindow.style.display = 'block'
+    offLabel.style.display = 'none'
+    latInput.style.display = 'none'
+    lngInput.style.display = 'none'
 }
 
 initAdd()
