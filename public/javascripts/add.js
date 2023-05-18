@@ -16,6 +16,41 @@ window.addEventListener("offline", () => {
 })
 
 /**
+ * Gets all identifications from DBPedia knowledge graph
+ */
+const getALlIdentifications = () => {
+    const endpointUrl = "http://dbpedia.org/sparql";
+    const sparqlQuery = `
+    SELECT *
+    WHERE {
+        ?label rdfs:label "List of birds by common name"@en;
+        dbo:wikiPageWikiLink ?wikiLink.
+    }
+    `
+    const encodedQuery = encodeURIComponent(sparqlQuery);
+    const queryUrl = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+    $.ajax({
+        type: "GET",
+        url: queryUrl,
+        dataType: "json",
+        // contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            console.log('res:', response);
+            const results = response.results.bindings;
+            const bird_species = results.map((result) => {
+                const link = result.wikiLink.value;
+                return link.split('/').pop().replace(/_/g, ' ');
+            })
+            const sorted_bird_species = bird_species.sort();
+            $.each(sorted_bird_species, function (_, bird_specie) {
+                $('#bird_species').append(`<option value='${bird_specie}'>${bird_specie}</option>`);
+            });
+        }
+    });
+}
+
+/**
  * Initialises Google Maps map centered over Sheffield, which can be clicked
  * to select a sighting geolocation
  * @returns {Promise<void>}
@@ -79,7 +114,7 @@ const initAdd = () => {
     if ('indexedDB' in window) {
         // Get username from the database when opened and set as the sighting author
         initIndexedDB(() => {
-            getUsername( (username) => {
+            getUsername((username) => {
                 setAuthor(username)
             })
         })
@@ -90,10 +125,14 @@ const initAdd = () => {
     }
 
     // Register service worker
-    if('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
     }
 }
+
+$(document).ready(function () {
+    getALlIdentifications()
+});
 
 initAdd()
 initMap()
