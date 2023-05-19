@@ -11,61 +11,144 @@
 
 </head>
 <body>
+<div class="container">
 
-<!-- Navigation Bar -->
-<header class="navbar">
-    <a href="/">Home</a>
-    <a href="/add">Add Sighting</a>
-</header>
+<!--&lt;!&ndash; Navigation Bar &ndash;&gt;-->
+<!--<header class="navbar">-->
+<!--    <a href="/">Home</a>-->
+<!--    <a href="/add">Add Sighting</a>-->
+<!--</header>-->
 
+<div class="grid-header">
+    <!-- Navigation Bar -->
+    <div class="navbar-container">
+        <div class="nav-button">
+            <a href="/">Home</a>
+        </div>
+        <div class="nav-button">
+            <a href="/add">Add Sighting</a>
+        </div>
+    </div>
+
+    <!-- Change randomly generated username form -->
+    <div id="username_form">
+        <form>
+            <input type="text" name="username" id="username_input" required minlength="3" maxlength="100">
+            <input id="username_btn_set" type="button" value="Change Username">
+        </form>
+    </div>
+</div>
+
+<div class="title-container">
+    <h2 class="table-title">
+        <%= title %>
+    </h2>
+</div>
+
+
+<!--<main>-->
+<!--    <div id="container">-->
+<!--    <form id="adding_form" enctype="multipart/form-data" method="post" action="/add">-->
+<!--        <input type="hidden" name="author" id="author" value="Unknown">-->
+<!--        <p>-->
+<!--            <label for="obs_date">Observation date:</label>-->
+<!--            <input type="datetime-local" name="obs_date" id="obs_date" required>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="location">Select sighting location:</label>-->
+<!--        </p>-->
+<!--        <label id="offline_label" for="lat" style="display: none">Offline, map not available, provide lat and lng manually: </label>-->
+<!--        <input name="lat" id="lat" value="53.383331" style="display: none">-->
+<!--        <input name="lng" id="lng" value="-1.466667" style="display: none">-->
+<!--        &lt;!&ndash;The div element for the map &ndash;&gt;-->
+<!--        <div id="map"></div>-->
+<!--        <p>-->
+<!--            <label for="bird_species">Identification:</label>-->
+<!--            <select id="bird_species" name="bird_species">-->
+<!--                <option selected>Unknown</option>-->
+<!--                <option>Uncertain</option>-->
+<!--                <option id="offline-option" style="display: none">Added Offline (Identification to be updated)</option>-->
+<!--            </select>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="desc">Description:</label>-->
+<!--            <input type="text" name="desc" id="desc" required maxlength="5000">-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="img">Load Image:</label>-->
+<!--            <input type="file" name="img" id="img" accept="image/*">-->
+<!--        </p>-->
+<!--        <button type="submit" id="submit_sighting_btn">Add Sighting</button>-->
+<!--    </form>-->
+<!--    </div>-->
+<!--</main>-->
 <main>
     <div id="container">
-    <h1><%= title %></h1>
-    <form id="adding_form" enctype="multipart/form-data" method="post" action="/add">
-        <input type="hidden" name="author" id="author" value="Unknown">
-        <p>
-            <label for="obs_date">Observation date:</label>
-            <input type="datetime-local" name="obs_date" id="obs_date" required>
-        </p>
-        <p>
-            <label for="location">Select sighting location:</label>
-        </p>
-        <label id="offline_label" for="lat" style="display: none">Offline, map not available, provide lat and lng manually: </label>
-        <input name="lat" id="lat" value="53.383331" style="display: none">
-        <input name="lng" id="lng" value="-1.466667" style="display: none">
-        <!--The div element for the map -->
-        <div id="map"></div>
-        <p>
-            <label for="bird_species">Identification:</label>
-            <select id="bird_species" name="bird_species">
-                <option selected>Unknown</option>
-                <option>Uncertain</option>
-                <option id="offline-option" style="display: none">Added Offline (Identification to be updated)</option>
-            </select>
-        </p>
-        <p>
-            <label for="desc">Description:</label>
-            <input type="text" name="desc" id="desc" required maxlength="5000">
-        </p>
-        <p>
-            <label for="img">Load Image:</label>
-            <input type="file" name="img" id="img" accept="image/*">
-        </p>
-        <button type="submit" id="submit_sighting_btn">Add Sighting</button>
-    </form>
+        <form id="adding_form" enctype="multipart/form-data" method="post" action="/add">
+            <div class="left-section">
+                <input type="hidden" name="author" id="author" value="Unknown">
+
+<!--                <p>-->
+<!--                    <label for="location">Select sighting location:</label>-->
+<!--                </p>-->
+                <div class="subtitle-container">
+                    <h2 class="small-title">
+                        <%= "Select sighting location" %>
+                    </h2>
+                </div>
+                <label id="offline_label" for="lat" style="display: none">Offline, map not available, provide lat and lng manually: </label>
+                <input name="lat" id="lat" value="53.383331" style="display: none">
+                <input name="lng" id="lng" value="-1.466667" style="display: none">
+                <!--The div element for the map -->
+                <div id="map"></div>
+            </div>
+            <div class="right-section">
+<!--                <input type="hidden" name="author" id="author" value="Unknown">-->
+                <div class="subtitle-container">
+                    <h2 class="small-title">
+                        <%= "Sighting details" %>
+                    </h2>
+                </div>
+                <p>
+                    <label for="obs_date">Observation date:</label>
+                    <input type="datetime-local" name="obs_date" id="obs_date" required>
+                </p>
+                <p>
+                    <label for="bird_species">Identification:</label>
+                    <select id="bird_species" name="bird_species">
+                        <option selected>Unknown</option>
+                        <option>Uncertain</option>
+                        <option id="offline-option" style="display: none">Added Offline (Identification to be updated)</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="desc">Description:</label>
+                    <input type="text" name="desc" id="desc" required maxlength="5000">
+                </p>
+                <p>
+                    <label for="img">Load Image:</label>
+                    <input type="file" name="img" id="img" accept="image/*">
+                </p>
+                <button type="submit" id="submit_sighting_btn">Add Sighting</button>
+            </div>
+        </form>
     </div>
 </main>
 
-<div>
-    <footer>
-        <p>© 2023 Bird Watching. All Rights Reserved.</p>
-    </footer>
-</div>
+
+
 
 <!-- Load Google Maps API -->
 <script>
     (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
     ({key: "AIzaSyA1stLPaNic3GRWYdMja7VTvAf3zfWUonA", v: "beta"});</script>
-
+</div>
+<div class="footer">
+    <footer>
+        <p>© 2023 Bird Watching. All Rights Reserved.</p>
+    </footer>
+</div>
 </body>
+
+
 </html>

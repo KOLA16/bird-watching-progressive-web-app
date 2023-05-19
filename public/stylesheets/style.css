@@ -1,21 +1,82 @@
-/* Style the navigation bar */
-.navbar {
-  overflow: hidden;
-  background-color: #333;
+/*!* Style the navigation bar *!*/
+/*.navbar {*/
+/*  overflow: hidden;*/
+/*  background-color: #333;*/
+/*}*/
+
+/*!* Style the links inside the navigation bar *!*/
+/*.navbar a {*/
+/*  float: left;*/
+/*  display: block;*/
+/*  color: white;*/
+/*  text-align: center;*/
+/*  padding: 14px 20px;*/
+/*  text-decoration: none;*/
+/*}*/
+html, body {
+  height: 95%;
+  margin: 0;
+  background-color: whitesmoke;
+}
+.container {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Style the links inside the navigation bar */
-.navbar a {
+.navbar-container {
+  display: flex;
+  overflow: hidden;
+  background-color: #333;
+
+}
+
+
+.navbar-container a {
   float: left;
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 20px;
+  padding: 1em 1em;
   text-decoration: none;
+  font-size: 16px;
+}
+#username_form {
+  margin-left: auto;
+}
+
+
+/* For grid header*/
+
+.grid-header {
+  display: flex;
+  align-items: center;
+  background-color: #333333;
+  /*grid-template-columns: 1fr 1fr;*/
+
+  /*justify-content: space-between;*/
+
+}
+/* --------------- */
+
+.nav-button {
+  transition: background-color 0.3s;
+  /*outline: 1px solid transparent; */
+}
+
+.nav-button:hover {
+  background-color: black;
+  cursor: pointer;
+  border-color: white;
 }
 
 #date-header {
   cursor: pointer;
+}
+
+.sighting-row {
+  transition: background-color 0.3s;
+  text-align: center;
 }
 
 .sighting-row:hover {
@@ -31,6 +92,7 @@
 footer {
   overflow: hidden;
   background-color: #333;
+  margin-top: auto;
   padding: 14px 20px;
 }
 
@@ -52,24 +114,87 @@ a {
  * that contains the map.
  */
 #map {
-  height: 300px;
-  width: 600px;
+  height: 20em;
+  width: 30em;
 }
 
+/*#table-container {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  !*background-color: #00B7FF;*!*/
+/*}*/
+
 #sightings_table {
-  width: 95%;
+  width: 100%;
 
 }
 
 #sightings_table td {
   text-align: center;
-  padding: 1em;
+  font-size: clamp(8px, 2vw, 20px); /* Adjust the minimum, preferred, and maximum font sizes as desired */
+
+/*padding: 1em 1em;*/
+}
+
+#sightings_table .headers {
+  background-color: dimgray;
+}
+
+#sightings_table .headers th {
+  color: white;
 }
 
 #sightings_table img {
-  max-width: 50%;
+  max-width: 40%;
   height: auto;
 }
+
+#sighting_page_img {
+  width: 100%;
+  height: clamp(20px, 40vw, 50vh);
+}
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5em;
+  margin: 0.5em 0em 0.5em 0em;
+  background-color: #333;
+}
+
+.table-title {
+  color: white;
+  /*background-color: #222;*/
+
+}
+
+.subtitle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3em;
+  margin: 0.5em 0em 0.5em 0em;
+  background-color: dimgray;
+}
+
+.subtitle-container-left {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 3em;
+  margin: 0.5em 0em 0.5em 0em;
+  background-color: dimgray;
+}
+
+.small-title {
+  color: white;
+  font-size: 1em;
+  margin-left: 2em;
+  /*background-color: #222;*/
+
+}
+
 
 /*
 * Scrollable chat window
@@ -87,4 +212,43 @@ a {
   position: absolute;
   bottom: 10px;
   width: 90%;
+}
+
+/* Add sighting page */
+#adding_form {
+  display: flex;
+  height: clamp(40vh, 2vw, 60vh);
+
+  /*background-color: #00B7FF;*/
+  margin-top: 0.5vh
+}
+
+.left-section {
+  flex: 1;
+  margin: 0 0.5em 0 0em;
+}
+
+.right-section {
+  flex: 1;
+  margin: 0 0 0 0.5em;
+}
+
+#map {
+  width: 100%;
+  height: clamp(20px, 40vw, 50vh);
+}
+
+#sighting-container {
+  display: flex;
+  /*align-items: center;*/
+  margin-top: 0.5vh
+}
+
+#sighting-container .left-sighting-section {
+  flex: 1;
+}
+
+#chat_interface {
+  width: 100%;
+
 }

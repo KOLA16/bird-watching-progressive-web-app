@@ -13,17 +13,28 @@
     <script type="module" src="/javascripts/sightings.js"></script>
 </head>
 
-<body class="container">
+<body>
+<div class="container">
+<!--<h1>-->
+<!--    <%= title %>-->
+<!--</h1>-->
 
-<!-- Navigation Bar -->
-<header class="navbar">
-    <a href="/">Home</a>
-    <a href="/add">Add Sighting</a>
-</header>
+<!--&lt;!&ndash; Navigation Bar &ndash;&gt;-->
+<!--<header class="navbar">-->
+<!--    <a href="/">Home</a>-->
+<!--    <a href="/add">Add Sighting</a>-->
+<!--</header>-->
 
-    <h1>
-        <%= title %>
-    </h1>
+<div class="grid-header">
+    <!-- Navigation Bar -->
+    <div class="navbar-container">
+        <div class="nav-button">
+            <a href="/">Home</a>
+        </div>
+        <div class="nav-button">
+            <a href="/add">Add Sighting</a>
+        </div>
+    </div>
 
     <!-- Change randomly generated username form -->
     <div id="username_form">
@@ -32,37 +43,45 @@
             <input id="username_btn_set" type="button" value="Change Username">
         </form>
     </div>
+</div>
 
-<!-- Table with all sightings -->
-<table id="sightings_table">
+<div class="title-container">
+    <h2 class="table-title">
+        <%= "List of All Sightings" %>
+    </h2>
+</div>
 
-    <thead>
-    <tr><th>Image</th><th id="date-header">Datetime</th><th>Identification</th><th>User</th></tr>
-    </thead>
+<div id="table-container">
+    <!-- Table with all sightings -->
+    <table id="sightings_table">
+        <thead>
+        <tr class="headers"><th>Image</th><th id="date-header">Datetime</th><th>Identification</th><th>User</th></tr>
+        </thead>
 
-    <tbody>
+        <tbody>
 
-    <% sightings.forEach((sighting, i)=> {%>
-        <tr onclick="window.location.href = '/sighting?id=<%= sighting._id %>'" class="sighting-row">
-            <td>
-                <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img'>
-            </td>
-            <td>
-                <%= moment(sighting.observation_date).format('D MMM H:mm') %>
-            </td>
-            <td>
-                <%= sighting.identification %>
-            </td>
-            <td>
-                <%= sighting.user_nickname %>
-            </td>
-        </tr>
-    <% }); %>
+        <% sightings.forEach((sighting, i)=> {%>
+            <tr onclick="window.location.href = '/sighting?id=<%= sighting._id %>'" class="sighting-row">
+                <td>
+                    <img src='<%= sighting.image %>' alt='Sighting image' id='sightings_img'>
+                </td>
+                <td>
+                    <%= moment(sighting.observation_date).format('D MMM H:mm') %>
+                </td>
+                <td>
+                    <%= sighting.identification %>
+                </td>
+                <td>
+                    <%= sighting.user_nickname %>
+                </td>
+            </tr>
+        <% }); %>
 
-    </tbody>
-</table>
-
-<div>
+        </tbody>
+    </table>
+</div>
+</div>
+<div class="footer">
     <footer>
         <p>© 2023 Bird Watching. All Rights Reserved.</p>
     </footer>
