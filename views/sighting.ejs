@@ -4,82 +4,148 @@
     <title><%= title %></title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
     <link rel='stylesheet' type='text/css' href='/stylesheets/style.css' />
+    <script type="module" src="/javascripts/indexeddb.js"></script>
     <script type="module" src="/javascripts/sighting.js"></script>
 </head>
 
+<!--&lt;!&ndash; Navigation Bar &ndash;&gt;-->
+<!--<header class="navbar">-->
+<!--    <a href="/">Home</a>-->
+<!--    <a href="/add">Add Sighting</a>-->
+<!--</header>-->
+
+<!--<h1><%= title %></h1>-->
 <body>
-<% include navbar %>
-
-<h1><%= title %></h1>
-<img src='<%= image %>' alt='Sighting image' id='sighting_img'>
-<!--Hacky solution to pass lat and lng to js file through hidden div element -->
-<div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
-<!--The div element for the map -->
-<div id="map"></div>
-
-<!-- div with sighting details -->
-<div id="sighting_details">
-    <p>
-        Added by:
-        <span id="author_nickname"><%= nickname %></span>
-    </p>
-    <p>Observation Date: <%= date %></p>
-    <p>
-        Identification:
-        <span id="identification"><%= identification %></span>
-    </p>
-    <button id="show_dialog_btn">Change Identification</button>
-    <p>Description: <%= description %></p>
-</div>
-
-<!-- modal dialog containing a form to update identification -->
-<dialog id="identification_dialog">
-    <form id="update_form" method="post" action="/sighting">
-        <input type="text" name="sighting_id" value="<%= sightingId %>" style="display: none">
-        <select id="new_identification" name="new_identification">
-            <option value="Unknown">Unknown</option>
-            <option value="Hawk">Hawk</option>
-            <option value="Eagle">Eagle</option>
-            <option value="Owl">Owl</option>
-            <option value="Falcon">Falcon</option>
-        </select>
-        <button id="update_btn" type="submit">Update</button>
-    </form>
-</dialog>
-
-
-<!--The div element for the chat interface -->
-<div id="chat_interface">
-    <div id="chatId" style="display: none;"><%= sightingId %></div>
-    <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
-    <div id="history"></div>
-    <div id="input">
-        <form onsubmit="return false;" style="width: 100%">
-            <p>
-                <label for="chat_input" id="chat_label"> CHAT: </label>
-                <input type="text" id="chat_input" name="chat_input" style="width: 30%;">
-                <button id="chat_send">Send</button>
-            </p>
-        </form>
-    </div>
-</div>
-
 <div>
-    <footer>
-        <p>© 2023 Bird Watching. All Rights Reserved.</p>
-    </footer>
-</div>
+    <div class="container">
+        <div class="grid-header">
+            <!-- Navigation Bar -->
+            <div class="navbar-container">
+                <div class="nav-button">
+                    <a href="/">Home</a>
+                </div>
+                <div class="nav-button">
+                    <a href="/add">Add Sighting</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Load Google Maps API -->
-<script>
-    if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' });
-    }
+    <div class="title-container">
+        <h2 class="table-title">
+            <%= title %>
+        </h2>
+    </div>
+    <!-- Image and location-->
+    <div id="sighting-container">
+        <div class="left-section">
+            <div class="subtitle-container">
+                <h2 class="small-title">
+                    <%= "Bird Image" %>
+                </h2>
+            </div>
+            <img src='<%= image %>' alt='Sighting image' id='sighting_page_img'>
+        </div>
+        <!--Hacky solution to pass lat and lng to js file through hidden div element -->
 
-    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-    ({key: "AIzaSyA1stLPaNic3GRWYdMja7VTvAf3zfWUonA", v: "beta"});</script>
+        <div class="right-section">
+            <div class="subtitle-container">
+                <h2 class="small-title">
+                    <%= "Sighting Location" %>
+                </h2>
+            </div>
+            <div id="location" data-lat=<%= lat %> data-lng=<%- lng %> hidden></div>
+                <!--The div element for the map -->
+                <div id="map"></div>
+                <div id="offline-loc" style="display: none">
+                    <label for="lat-off">Lat:</label><p id="lat-off"><%= lat %></p>
+                    <label for="lng-off">Lng:</label><p id="lng-off"><%= lng %></p>
+                </div>
+            </div>
+        </div>
 
+    </div>
+    <!-- modal dialog containing a form to update identification -->
+    <dialog id="identification_dialog">
+        <form id="update_form" method="post" action="/sighting">
+            <input type="text" name="sighting_id" value="<%= sightingId %>" style="display: none">
+            <select id="new_identification" name="new_identification">
+                <option value="Unknown">Unknown</option>
+                <option value="Uncertain">Uncertain</option>
+            </select>
+            <button id="update_btn" type="submit">Update</button>
+        </form>
+    </dialog>
+
+    <div id="sighting-detail-chat">
+        <!-- div with sighting details -->
+        <div id="sighting_details">
+            <div class="subtitle-container">
+                <h2 class="small-title">
+                    <%= "Sighting Details" %>
+                </h2>
+            </div>
+            <p>
+                Added by:
+                <span id="author_nickname"><%= nickname %></span>
+            </p>
+            <p>Observation Date: <%= date %> </p>
+            <p>
+                Identification:
+                <span id="identification"><%= identification %></span>
+            </p>
+            <button id="show_dialog_btn">Change Identification</button>
+            <p>Description: <%= description %></p>
+            <p>DBPedia abstract: <%= abstract %></p>
+            <p>Wiki link:</p> <a href="<%= link %>"><%= link %></a>
+        </div>
+
+
+
+    <!--The div element for the chat interface -->
+    <div id="chat_interface">
+        <div class="subtitle-container">
+            <h2 class="small-title">
+                <%= "Chat" %>
+            </h2>
+        </div>
+        <div id="chat-window">
+            <div>
+                <div id="chatId" style="display: none;"><%= sightingId %></div>
+                <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
+                <div id="history"></div>
+                <div id="input">
+                    <form onsubmit="return false;" style="width: 100%">
+                        <p>
+                            <label for="chat_input" id="chat_label"> CHAT: </label>
+                            <input type="text" id="chat_input" name="chat_input" style="width: 30%;">
+                            <button id="chat_send">Send</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Load Google Maps API -->
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' });
+        }
+
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyA1stLPaNic3GRWYdMja7VTvAf3zfWUonA", v: "beta"});</script>
+    </div>
+    <div class="footer">
+        <footer>
+            <p>© 2023 Bird Watching. All Rights Reserved.</p>
+        </footer>
+    </div>
 </body>
+
+
 </html>

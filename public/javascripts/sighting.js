@@ -1,11 +1,13 @@
 let map
-let username = null
+let visitorUsername = null
 let chatId = null
 
 const socket = io()
 const sendChatButton = document.getElementById("chat_send")
 const showDialogButton = document.getElementById("show_dialog_btn")
 const dialog = document.getElementById("identification_dialog")
+const author = document.getElementById("author_nickname").innerHTML
+
 
 const initMap = async () => {
     // The location of sighting
@@ -38,9 +40,6 @@ const initMap = async () => {
  */
 const initChat = () => {
 
-    // get username from IndexedDB
-    getUsername()
-
     // print chat history stored in MongoDB
     let messagesStr = document.getElementById('messages').textContent
     let messages = JSON.parse(messagesStr)
@@ -59,8 +58,7 @@ const initChat = () => {
 
     // called when a message is received
     socket.on('chat', (room, userId, chatText) => {
-        let who = userId
-        writeOnHistory('<b>' + who + ':</b> ' + chatText)
+        writeOnHistory('<b>' + userId + ':</b> ' + chatText)
     })
 }
 
@@ -69,7 +67,7 @@ const initChat = () => {
  */
 const connectToRoom = () => {
     chatId = document.getElementById('chatId').innerHTML
-    socket.emit('create or join', chatId, username)
+    socket.emit('create or join', chatId, visitorUsername)
 }
 
 /**
@@ -78,7 +76,7 @@ const connectToRoom = () => {
  */
 const sendChatText = () => {
     let chatText = document.getElementById('chat_input').value
-    socket.emit('chat', chatId, username, chatText)
+    socket.emit('chat', chatId, visitorUsername, chatText)
 }
 
 /**
@@ -94,52 +92,126 @@ const writeOnHistory = (text) => {
 }
 
 /**
- * Gets current username from IndexedDB
+ * Verifies if the current user created the visited sighting,
+ * and allows updating the identification if true. It also
+ * connects to the chat room where the visitor username serves
+ * as a chat username
+ * @param username
  */
-const getUsername = () => {
-    const localIDB = requestIDB.result
-    const transaction = localIDB.transaction(["usernames"], "readwrite")
-    const localStore = transaction.objectStore("usernames")
-    const getRequest = localStore.get(1)
-    getRequest.addEventListener("success", () => {
-        username = getRequest.result.username
-        console.log(username)
+const setVisitorUsername = (username) => {
+    visitorUsername = username
 
-        // check if the current username created the sighting
-        // allow updating identification if yes
-        const author = document.getElementById("author_nickname").innerHTML
-        if (username === author) {
-            showDialogButton.style.display = "inline"
-            showDialogButton.addEventListener("click", () => {
-                dialog.showModal()
+    // check if the current username created the sighting
+    // allow updating identification if yes
+    if (visitorUsername === author) {
+        showDialogButton.style.display = "inline"
+        showDialogButton.addEventListener("click", () => {
+            dialog.showModal()
+        })
+    } else {
+        showDialogButton.style.display = "none"
+    }
+
+    // connect to chat room when username retrieved from IndexedDB
+    connectToRoom()
+    // and enable sending chat messages
+    sendChatButton.addEventListener('click', sendChatText)
+}
+
+/**
+ * Opens IndexedDB database and registers service worker
+ */
+const initSighting = () => {
+    // Check for indexedDB support
+    if ('indexedDB' in window) {
+        // Get username from the database when opened and verify if is the author,
+        // also use it as the chat username
+        initIndexedDB(() => {
+            getUsername( (username) => {
+                setVisitorUsername(username)
             })
-        } else {
-            showDialogButton.style.display = "none"
+        })
+    } else {
+        console.log('This browser doesn\'t support IndexedDB')
+    }
+
+    // Register service worker
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    }
+}
+
+/**
+ * Gets all identifications from DBPedia knowledge graph
+ */
+const getALlIdentifications = () => {
+    const endpointUrl = "http://dbpedia.org/sparql";
+    const sparqlQuery = `
+    SELECT *
+    WHERE {
+        ?label rdfs:label "List of birds by common name"@en;
+        dbo:wikiPageWikiLink ?wikiLink.
+    }
+    `
+    const encodedQuery = encodeURIComponent(sparqlQuery);
+    const queryUrl = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+    $.ajax({
+        type: "GET",
+        url: queryUrl,
+        dataType: "json",
+        // contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            const results = response.results.bindings;
+            const bird_species = results.map((result) => {
+                const link = result.wikiLink.value;
+                return link.split('/').pop().replace(/_/g, ' ');
+            })
+            const sorted_bird_species = bird_species.sort();
+            $.each(sorted_bird_species, function (_, bird_specie) {
+                $('#new_identification').append(`<option value='${bird_specie}'>${bird_specie}</option>`);
+            });
         }
+    });
+}
 
-        // connect to chat room when username retrieved from IndexedDB
-        connectToRoom()
+//// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
+const mapWindow = document.getElementById("map")
+const offlineLoc = document.getElementById("offline-loc")
+
+window.addEventListener('load', () => {
+
+    // Hides map and displays geolocation as text
+    // if user goes offline when he is on the /add page
+    window.addEventListener('offline', () => {
+        mapWindow.style.display = 'none'
+        offlineLoc.style.display = 'block'
     })
-}
 
-const handleSuccess = () => {
-    console.log('Database opened')
-    initChat()
-}
+    // Shows map and hides geolocation as text
+    // if user goes online when he is on the /add page
+    window.addEventListener('online', () => {
+        mapWindow.style.display = 'block'
+        offlineLoc.style.display = 'none'
+    })
 
-const handleUpgrade = (ev) => {
-    const db = ev.target.result
-    db.createObjectStore("usernames", { keyPath: "id" })
-    db.createObjectStore("sightings", { keyPath: "id", autoIncrement: true})
-    console.log('Upgraded object store')
-}
+    // Checking the online status with navigator,
+    // allows to hide the map even if user enters the /add page,
+    // but he is already offline
+    if (!navigator.onLine) {
+        mapWindow.style.display = 'none'
+        offlineLoc.style.display = 'block'
+    } else {
+        mapWindow.style.display = 'block'
+        offlineLoc.style.display = 'none'
+    }
 
-const requestIDB = indexedDB.open("local")
-requestIDB.addEventListener("upgradeneeded", handleUpgrade)
-requestIDB.addEventListener("success", handleSuccess)
-requestIDB.addEventListener("error", (err) => {
-    console.log("ERROR : " + JSON.stringify(err))
 })
 
-sendChatButton.addEventListener('click', sendChatText)
+$(document).ready(function () {
+    getALlIdentifications()
+});
+
+initChat()
+initSighting()
 initMap()

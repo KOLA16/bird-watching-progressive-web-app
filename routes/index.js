@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
 
 /* GET add sighting page. */
 router.get('/add', (req, res, next) => {
-  res.render('add', { title: 'Add new bird sighting' })
+  sighting.add_get(req, res)
 })
 
 /* POST new sighting to the database. */
@@ -43,10 +43,5 @@ router.get('/sighting', (req, res, next) => {
 router.post('/sighting', (req, res, next) => {
   sighting.sighting_update_identification(req, res)
 })
-
-app.get('/sightings', (req, res) => {
-  res.render('sightings');
-});
-
 
 module.exports = router
