@@ -157,11 +157,12 @@ const addSighting = async (requestClone) => {
         const transaction = localIDB.transaction([SIGHTINGS_STORE_NAME], "readwrite")
         const localStore = transaction.objectStore(SIGHTINGS_STORE_NAME)
 
+        console.log(formValues)
         const addRequest = localStore.add({
             author: formValues[0],
-            obs_date: formValues[1],
-            lat: formValues[2],
-            lng: formValues[3],
+            lat: formValues[1],
+            lng: formValues[2],
+            obs_date: formValues[3],
             bird_species: formValues[4],
             desc: formValues[5],
             img: formValues[6],

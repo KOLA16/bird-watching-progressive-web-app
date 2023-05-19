@@ -36,8 +36,6 @@ body {
 
 }
 
-
-
 .navbar-container a {
   float: left;
   display: block;
@@ -157,8 +155,10 @@ a {
 }
 
 #sightings_table img {
-  max-width: 40%;
+  width: 100%;
+  max-width: 250px;
   height: auto;
+  max-height: 200px;
 }
 
 #sighting_page_img {
