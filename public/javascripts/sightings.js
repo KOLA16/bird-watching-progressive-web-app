@@ -100,10 +100,9 @@ const initSightings = () => {
     }
 }
 
-window.addEventListener('load', () => {
-    initSightings()
-    enableChangeUsername()
-})
+initSightings()
+enableChangeUsername()
+
 
 
 

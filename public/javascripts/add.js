@@ -125,18 +125,15 @@ const initAdd = () => {
 
 //// ******** ONLINE/OFFLINE INTERFACE UPDATES ******** /////
 
-window.addEventListener('load', () => {
-    // Hides map and displays manual geolocation inputs
-    // if user goes offline when he is on the /add page
-    window.addEventListener('offline', () => {
-        // TODO: Change to use HTML5 Geolocation instead,
-        //  i.e. use the latest online registered location
-        mapWindow.style.display = 'none'
-        offOption.style.display = 'inline'
-        offLabel.style.display = 'inline'
-        latInput.style.display = 'inline'
-        lngInput.style.display = 'inline'
-    })
+// Hides map and displays manual geolocation inputs
+// if user goes offline when he is on the /add page
+window.addEventListener('offline', () => {
+    mapWindow.style.display = 'none'
+    offOption.style.display = 'inline'
+    offLabel.style.display = 'inline'
+    latInput.style.display = 'inline'
+    lngInput.style.display = 'inline'
+})
 
 // Shows map and hides manual geolocation inputs
 // if user goes online when he is on the /add page
@@ -164,13 +161,10 @@ window.addEventListener('load', () => {
         latInput.style.display = 'none'
         lngInput.style.display = 'none'
     }
-})
 
 $(document).ready(function () {
     getALlIdentifications()
 });
 
-window.addEventListener('load', () => {
-    initAdd()
-    initMap()
-})
+initAdd()
+initMap()
