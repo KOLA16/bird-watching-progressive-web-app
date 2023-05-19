@@ -31,6 +31,6 @@ The submission repository for [COM3504 The Intelligent Web](https://www.dcs.shef
 
 # Installation and running
 
-- Install and run MongoDB instance
+- Install and run MongoDB instance (on port 27017)
 - Install required node modules: `$ npm install`
-- Start the app: `$ npm start`
+- Start the app: `$ npm start` or run bin\www file
