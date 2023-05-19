@@ -84,9 +84,7 @@ const initSightings = () => {
     if ('indexedDB' in window) {
         initIndexedDB(() => {
             // initialise a random username
-            addRandomUsername(() => {
-                enableChangeUsername()
-            })
+            addRandomUsername()
 
             getSightings((sighting) => {
                 appendToTable(sighting)
@@ -101,4 +99,11 @@ const initSightings = () => {
         navigator.serviceWorker.register('/sw.js', { scope: '/' })
     }
 }
-initSightings()
+
+window.addEventListener('load', () => {
+    initSightings()
+    enableChangeUsername()
+})
+
+
+

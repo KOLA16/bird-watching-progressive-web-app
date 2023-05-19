@@ -8,9 +8,8 @@ let requestIDB
 /**
  * Generates initial random username ('Username${randomNumber}), and
  * stores it in database
- * @param writeSuccessCallback
  */
-const addRandomUsername = (writeSuccessCallback) => {
+const addRandomUsername = () => {
     const localIDB = requestIDB.result
     const transaction = localIDB.transaction([USER_STORE_NAME], "readwrite")
     const localStore = transaction.objectStore(USER_STORE_NAME)
@@ -21,7 +20,7 @@ const addRandomUsername = (writeSuccessCallback) => {
 
     const addRequest = localStore.add({id: 1, username: username})
     addRequest.addEventListener("success", () => {
-        writeSuccessCallback()
+        console.log('Random username generated')
     })
 }
 window.addRandomUsername = addRandomUsername

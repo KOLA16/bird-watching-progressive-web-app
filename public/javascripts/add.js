@@ -170,5 +170,7 @@ $(document).ready(function () {
     getALlIdentifications()
 });
 
-initAdd()
-initMap()
+window.addEventListener('load', () => {
+    initAdd()
+    initMap()
+})

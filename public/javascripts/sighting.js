@@ -212,6 +212,8 @@ $(document).ready(function () {
     getALlIdentifications()
 });
 
-initChat()
-initSighting()
-initMap()
+window.addEventListener('load', () => {
+    initChat()
+    initSighting()
+    initMap()
+})
