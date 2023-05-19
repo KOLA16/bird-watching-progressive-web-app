@@ -261,18 +261,20 @@ a {
 
 #sighting-detail-chat {
   display: flex;
+  flex-direction: column;
+
 
 }
 
 #sighting-details {
-  flex: 2;
+  flex: 1;
   /*margin-right: 0.5em;*/
 }
 
 #chat_interface {
   flex: 1;
   width: 100%;
-  margin-left: 1em;
+  /*margin-left: 1em;*/
   /*background-color: aqua;*/
 
 
@@ -281,7 +283,7 @@ a {
 #chat-window {
 
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   /*background-color: #00B7FF;*/
   /*width: clamp(10px, 70vw, 50em);*/
@@ -290,8 +292,16 @@ a {
   /*box-shadow: 2px 2px 0 #ccc, -2px -2px 0 #fff;*/
 }
 
+@media (max-width: 1200px) {
+  #chat-window {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
 #history {
   /*background-color: #333333;*/
-  width: clamp(5em, 45vw, 48em);
+  width: clamp(5em, 80vw, 80em);
 
 }
