@@ -76,30 +76,6 @@
         </div>
 
     </div>
-
-
-    <!-- div with sighting details -->
-    <div id="sighting_details">
-        <div class="subtitle-container-left">
-            <h2 class="small-title">
-                <%= "Sighting Details" %>
-            </h2>
-        </div>
-        <p>
-            Added by:
-            <span id="author_nickname"><%= nickname %></span>
-        </p>
-        <p>Observation Date: <%= date %> </p>
-        <p>
-            Identification:
-            <span id="identification"><%= identification %></span>
-        </p>
-        <button id="show_dialog_btn">Change Identification</button>
-        <p>Description: <%= description %></p>
-        <p>DBPedia abstract: <%= abstract %></p>
-        <p>Wiki link:</p> <a href="<%= link %>"><%= link %></a>
-    </div>
-
     <!-- modal dialog containing a form to update identification -->
     <dialog id="identification_dialog">
         <form id="update_form" method="post" action="/sighting">
@@ -112,26 +88,55 @@
         </form>
     </dialog>
 
+    <div id="sighting-detail-chat">
+        <!-- div with sighting details -->
+        <div id="sighting_details">
+            <div class="subtitle-container">
+                <h2 class="small-title">
+                    <%= "Sighting Details" %>
+                </h2>
+            </div>
+            <p>
+                Added by:
+                <span id="author_nickname"><%= nickname %></span>
+            </p>
+            <p>Observation Date: <%= date %> </p>
+            <p>
+                Identification:
+                <span id="identification"><%= identification %></span>
+            </p>
+            <button id="show_dialog_btn">Change Identification</button>
+            <p>Description: <%= description %></p>
+            <p>DBPedia abstract: <%= abstract %></p>
+            <p>Wiki link:</p> <a href="<%= link %>"><%= link %></a>
+        </div>
+
+
 
     <!--The div element for the chat interface -->
     <div id="chat_interface">
-        <div class="subtitle-container-left">
+        <div class="subtitle-container">
             <h2 class="small-title">
                 <%= "Chat" %>
             </h2>
         </div>
-        <div id="chatId" style="display: none;"><%= sightingId %></div>
-        <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
-        <div id="history"></div>
-        <div id="input">
-            <form onsubmit="return false;" style="width: 100%">
-                <p>
-                    <label for="chat_input" id="chat_label"> CHAT: </label>
-                    <input type="text" id="chat_input" name="chat_input" style="width: 30%;">
-                    <button id="chat_send">Send</button>
-                </p>
-            </form>
+        <div id="chat-window">
+            <div>
+                <div id="chatId" style="display: none;"><%= sightingId %></div>
+                <div id="messages" style="display: none;"><%= JSON.stringify(messages) %></div>
+                <div id="history"></div>
+                <div id="input">
+                    <form onsubmit="return false;" style="width: 100%">
+                        <p>
+                            <label for="chat_input" id="chat_label"> CHAT: </label>
+                            <input type="text" id="chat_input" name="chat_input" style="width: 30%;">
+                            <button id="chat_send">Send</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
         </div>
+    </div>
     </div>
 
     <!-- Load Google Maps API -->
