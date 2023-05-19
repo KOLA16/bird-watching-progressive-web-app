@@ -5,7 +5,7 @@ The submission repository for [COM3504 The Intelligent Web](https://www.dcs.shef
 # Team Members
 
 - Igor Kolasa ([ikkolasa1@sheffield.ac.uk](ikkolasa1@sheffield.ac.uk))
-- Albertina Elena Ripanu ([aca19aer@shefdield.ac.uk](aca19aer@shefdield.ac.uk]))
+- Albertina Elena Ripanu ([aca19aer@sheffield.ac.uk](aca19aer@sheffield.ac.uk]))
 - Kambang Ewan ([ekambang1@sheffield.ac.uk](ekambang1@sheffield.ac.uk))
 - Wan Tao ([twan2@sheffield.ac.uk](twan2@sheffield.ac.uk))
 
