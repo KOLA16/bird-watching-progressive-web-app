@@ -1,6 +1,6 @@
 # Bird Watching PWA
 
-The submission repository for [COM3504 The Intelligent Web](https://www.dcs.shef.ac.uk/intranet/teaching/public/modules/level3/com3504.html) module.
+The submission repository for [COM3504 The Intelligent Web](https://www.dcs.shef.ac.uk/intranet/teaching/public/modules/level3/com3504.html) module. Web application for sharing bird sightings details with other users.
 
 # Team Members
 
